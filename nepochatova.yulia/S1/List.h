@@ -250,6 +250,22 @@ namespace nepochatova {
       return *this;
     }
 
+    LIter<T> begin() {
+      return LIter<T>(head, head);
+    }
+
+    LIter<T> end() {
+      return LIter<T>(nullptr, head);
+    }
+
+    LCIter<T> cbegin() const {
+      return LCIter<T>(head, head);
+    }
+
+    LCIter<T> cend() const {
+      return LCIter<T>(nullptr, head);
+    }
+
     bool empty() const noexcept {
       return list_size == 0;
     }
