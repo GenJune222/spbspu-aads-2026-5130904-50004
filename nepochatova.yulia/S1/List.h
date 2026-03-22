@@ -341,6 +341,44 @@ namespace nepochatova {
       }
       ++list_size;
     }
+
+    void push_back(const T& value)
+    {
+      Node* new_node = new Node(value);
+      if (empty())
+      {
+        head = new_node;
+        head->prev = head;
+        head->next = head;
+      }
+      else
+      {
+        new_node->prev = head->prev;
+        new_node->next = head;
+        head->prev->next = new_node;
+        head->prev = new_node;
+      }
+      ++list_size;
+    }
+
+    void push_back(T&& value)
+    {
+      Node* new_node = new Node(std::move(value));
+      if (empty())
+      {
+        head = new_node;
+        head->prev = head;
+        head->next = head;
+      }
+      else
+      {
+        new_node->prev = head->prev;
+        new_node->next = head;
+        head->prev->next = new_node;
+        head->prev = new_node;
+      }
+      ++list_size;
+    }
   };
 };
 #endif
