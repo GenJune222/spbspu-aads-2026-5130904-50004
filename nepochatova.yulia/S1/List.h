@@ -114,6 +114,14 @@ namespace nepochatova {
       }
       return *this;
     }
+
+    bool empty() const noexcept {
+      return list_size == 0;
+    }
+
+    size_t size() const noexcept {
+      return list_size;
+    }
   };
 };
 #endif
