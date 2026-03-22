@@ -424,6 +424,42 @@ namespace nepochatova {
         --list_size;
       }
     }
+
+    LIter<T> insert(LIter<T> pos, const T& value) {
+      if (empty()) {
+        push_back(value);
+        return begin();
+      }
+      Node* curr = pos.current;
+      if (curr == nullptr)
+      {
+        push_back(value);
+        return LIter<T>(head->prev, head);
+      }
+      Node* new_node = new Node(value, curr, curr->prev);
+      curr->prev->next = new_node;
+      curr->prev = new_node;
+      ++list_size;
+      return LIter<T>(new_node, head);
+    }
+
+    LIter<T> insert(LIter<T> pos, T&& value) {
+      if (empty()) {
+        push_back(std::move(value));
+        return begin();
+      }
+      Node* curr = pos.current;
+      if (curr == nullptr)
+      {
+        push_back(std::move(value));
+        return LIter<T>(head->prev, head);
+      }
+      Node* new_node = new Node(std::move(value), curr, curr->prev);
+      curr->prev->next = new_node;
+      curr->prev = new_node;
+      ++list_size;
+      return LIter<T>(new_node, head);
+    }
   };
 };
 #endif
