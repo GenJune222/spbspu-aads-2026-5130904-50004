@@ -379,6 +379,51 @@ namespace nepochatova {
       }
       ++list_size;
     }
+
+    void pop_front()
+    {
+      if (empty())
+      {
+        throw std::runtime_error("List is empty");
+      }
+      else if (size() == 1)
+      {
+        delete head;
+        head = nullptr;
+        list_size = 0;
+      }
+      else
+      {
+        Node* toDelete = head;
+        head->prev->next = head->next;
+        head->next->prev = head->prev;
+        head = head->next;
+        delete toDelete;
+        --list_size;
+      }
+    }
+
+    void pop_back()
+    {
+      if (empty())
+      {
+        throw std::runtime_error("List is empty");
+      }
+      else if (size() == 1)
+      {
+        delete head;
+        head = nullptr;
+        list_size = 0;
+      }
+      else
+      {
+        Node* toDelete = head->prev;
+        toDelete->prev->next = head;
+        head->prev = toDelete->prev;
+        delete toDelete;
+        --list_size;
+      }
+    }
   };
 };
 #endif
