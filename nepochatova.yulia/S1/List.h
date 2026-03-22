@@ -9,12 +9,45 @@ namespace nepochatova {
   template<class T>
   class LIter {
     friend class List<T>;
+  private:
+    using Node = typename List<T>::Node;
+    Node* current;
+    Node* head;
 
+    explicit LIter(Node* node, Node* listHead) noexcept
+      : current(node), head(listHead) {}
+
+  public:
+    LIter() noexcept: current(nullptr), head(nullptr) {}
+
+    LIter(const LIter&) noexcept = default;
+    LIter(LIter&&) noexcept = default;
+    LIter& operator=(const LIter&) noexcept = default;
+    LIter& operator=(LIter&&) noexcept = default;
+    ~LIter() = default;
   };
 
   template<class T>
   class LCIter {
     friend class List<T>;
+  private:
+    using Node = typename List<T>::Node;
+    const Node* current;
+    const Node* head;
+
+    explicit LCIter(const Node* node, const Node* listHead) noexcept
+      : current(node), head(listHead) {}
+
+  public:
+    LCIter() noexcept: current(nullptr), head(nullptr) {}
+
+    LCIter(const LCIter&) noexcept = default;
+    LCIter(LCIter&&) noexcept = default;
+    LCIter& operator=(const LCIter&) noexcept = default;
+    LCIter& operator=(LCIter&&) noexcept = default;
+    ~LCIter() = default;
+
+    LCIter(const LIter<T>& other) noexcept: current(other.current), head(other.head) {}
   };
 
   template<class T>
@@ -28,8 +61,12 @@ namespace nepochatova {
       Node* next;
       Node* prev;
 
-      Node(const T& value) : data(value), prev(nullptr), next(nullptr) {}
+      explicit Node(const T& val, Node* p = nullptr, Node* n = nullptr):
+      data(val), prev(p), next(n) {}
+      explicit Node(T&& val, Node* p = nullptr, Node* n = nullptr):
+      data(std::move(val)), prev(p), next(n) {}
     };
+
     Node* head;
     size_t list_size;
 
