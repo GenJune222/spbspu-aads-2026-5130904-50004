@@ -460,6 +460,34 @@ namespace nepochatova {
       ++list_size;
       return LIter<T>(new_node, head);
     }
+
+    LIter<T> erase(LIter<T> pos) {
+      if (empty())
+      {
+        throw std::runtime_error("List is empty");
+      }
+      if (pos.current == nullptr)
+      {
+        throw std::runtime_error("Cannot erase end()");
+      }
+      if (size() == 1)
+      {
+        delete pos.current;
+        head = nullptr;
+        list_size = 0;
+        return end();
+      }
+      Node* toDelete = pos.current;
+      Node* nextNode = toDelete->next;
+      if (toDelete == head) {
+        head = head->next;
+      }
+      toDelete->prev->next = toDelete->next;
+      toDelete->next->prev = toDelete->prev;
+      delete toDelete;
+      --list_size;
+      return LIter<T>(nextNode == head ? nullptr : nextNode, head);
+    }
   };
 };
 #endif
