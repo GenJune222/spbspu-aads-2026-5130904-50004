@@ -32,6 +32,68 @@ namespace nepochatova {
     };
     Node* head;
     size_t list_size;
+
+    void clear() noexcept {
+      if (head == nullptr) {
+        return;
+      }
+      Node* start = head;
+      Node* current = head->next;
+
+      while (current != start) {
+        Node* next = current->next;
+        delete current;
+        current = next;
+      }
+      delete start;
+      head = nullptr;
+      list_size = 0;
+    }
+
+    void copyFrom(const List& other) {
+      if (other.empty()) return;
+
+      head = new Node(other.head->data);
+      head->prev = head;
+      head->next = head;
+      list_size = 1;
+
+      Node* lastCreated = head;
+      Node* otherCurrent = other.head->next;
+
+      try {
+        while (otherCurrent != other.head) {
+          Node* newNode = new Node(otherCurrent->data);
+          newNode->prev = lastCreated;
+          newNode->next = head;
+          lastCreated->next = newNode;
+          head->prev = newNode;
+
+          lastCreated = newNode;
+          otherCurrent = otherCurrent->next;
+          ++list_size;
+        }
+      } catch (...) {
+        clear();
+        throw;
+      }
+    }
+
+  public:
+    List():head(nullptr), list_size(0) {};
+
+    ~List() {
+      clear();
+    };
+
+    List(const List& other) : head(nullptr), list_size(0) {
+      copyFrom(other);
+    }
+
+    List(List&& other) noexcept : head(other.head), list_size(other.list_size) {
+      other.head = nullptr;
+      other.list_size = 0;
+    }
   };
 };
 #endif
