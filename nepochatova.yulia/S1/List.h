@@ -122,6 +122,34 @@ namespace nepochatova {
     size_t size() const noexcept {
       return list_size;
     }
+
+    T& front() {
+      if (empty()) {
+        throw std::runtime_error("List is empty");
+      }
+      return head->data;
+    }
+
+    const T& front() const {
+      if (empty()) {
+        throw std::runtime_error("List is empty");
+      }
+      return head->data;
+    }
+
+    T& back() {
+      if (empty()) {
+        throw std::runtime_error("List is empty");
+      }
+      return head->prev->data;
+    }
+
+    const T& back() const {
+      if (empty()) {
+        throw std::runtime_error("List is empty");
+      }
+      return head->prev->data;
+    }
   };
 };
 #endif
