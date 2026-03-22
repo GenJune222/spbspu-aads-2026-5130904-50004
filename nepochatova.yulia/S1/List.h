@@ -78,6 +78,10 @@ namespace nepochatova {
         throw;
       }
     }
+    void swap(List& other) noexcept {
+      std::swap(head, other.head);
+      std::swap(list_size, other.list_size);
+    }
 
   public:
     List():head(nullptr), list_size(0) {};
@@ -93,6 +97,22 @@ namespace nepochatova {
     List(List&& other) noexcept : head(other.head), list_size(other.list_size) {
       other.head = nullptr;
       other.list_size = 0;
+    }
+
+    List& operator=(const List& other) {
+      List temp(other);
+      this->swap(temp);
+      return *this;
+    }
+    List& operator=(List&& other) noexcept {
+      if (this != &other) {
+        clear();
+        head = other.head;
+        list_size = other.list_size;
+        other.head = nullptr;
+        other.list_size = 0;
+      }
+      return *this;
     }
   };
 };
