@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <utility>
 
-namespace nepochatova {
+namespace nepochatova{
   template<class T> class List;
   template<class T>
   class LIter {
@@ -96,7 +96,8 @@ namespace nepochatova {
     LCIter& operator=(LCIter&&) noexcept = default;
     ~LCIter() = default;
 
-    LCIter(const LIter<T>& other) noexcept: current(other.current), head(other.head) {}
+    LCIter(const LIter<T>& other) noexcept
+      : current(other.current), head(other.head) {}
 
     const T& operator*() const {
       return current->data;
@@ -150,6 +151,7 @@ namespace nepochatova {
 
   template<class T>
   class List {
+
     friend class LIter< T >;
     friend class LCIter< T >;
 
@@ -217,19 +219,18 @@ namespace nepochatova {
       std::swap(head, other.head);
       std::swap(list_size, other.list_size);
     }
-
   public:
-    List():head(nullptr), list_size(0) {};
+    List(): head(nullptr), list_size(0) {};
 
     ~List() {
       clear();
     };
 
-    List(const List& other) : head(nullptr), list_size(0) {
+    List(const List& other): head(nullptr), list_size(0) {
       copyFrom(other);
     }
 
-    List(List&& other) noexcept : head(other.head), list_size(other.list_size) {
+    List(List&& other) noexcept: head(other.head), list_size(other.list_size) {
       other.head = nullptr;
       other.list_size = 0;
     }
@@ -305,14 +306,11 @@ namespace nepochatova {
     void push_front(const T& value)
     {
       Node* new_node = new Node(value);
-      if (empty())
-      {
+      if (empty()) {
         head = new_node;
         head->prev = head;
         head->next = head;
-      }
-      else
-      {
+      } else {
         new_node->prev = head->prev;
         new_node->next = head;
         head->prev->next = new_node;
@@ -325,14 +323,11 @@ namespace nepochatova {
     void push_front(T&& value)
     {
       Node* new_node = new Node(std::move(value));
-      if (empty())
-      {
+      if (empty()) {
         head = new_node;
         head->prev = head;
         head->next = head;
-      }
-      else
-      {
+      } else {
         new_node->prev = head->prev;
         new_node->next = head;
         head->prev->next = new_node;
@@ -345,14 +340,11 @@ namespace nepochatova {
     void push_back(const T& value)
     {
       Node* new_node = new Node(value);
-      if (empty())
-      {
+      if (empty()) {
         head = new_node;
         head->prev = head;
         head->next = head;
-      }
-      else
-      {
+      } else {
         new_node->prev = head->prev;
         new_node->next = head;
         head->prev->next = new_node;
@@ -364,14 +356,11 @@ namespace nepochatova {
     void push_back(T&& value)
     {
       Node* new_node = new Node(std::move(value));
-      if (empty())
-      {
+      if (empty()) {
         head = new_node;
         head->prev = head;
         head->next = head;
-      }
-      else
-      {
+      } else {
         new_node->prev = head->prev;
         new_node->next = head;
         head->prev->next = new_node;
@@ -382,18 +371,13 @@ namespace nepochatova {
 
     void pop_front()
     {
-      if (empty())
-      {
+      if (empty()) {
         throw std::runtime_error("List is empty");
-      }
-      else if (size() == 1)
-      {
+      } else if (size() == 1) {
         delete head;
         head = nullptr;
         list_size = 0;
-      }
-      else
-      {
+      } else {
         Node* toDelete = head;
         head->prev->next = head->next;
         head->next->prev = head->prev;
@@ -405,18 +389,13 @@ namespace nepochatova {
 
     void pop_back()
     {
-      if (empty())
-      {
+      if (empty()) {
         throw std::runtime_error("List is empty");
-      }
-      else if (size() == 1)
-      {
+      } else if (size() == 1) {
         delete head;
         head = nullptr;
         list_size = 0;
-      }
-      else
-      {
+      } else {
         Node* toDelete = head->prev;
         toDelete->prev->next = head;
         head->prev = toDelete->prev;
@@ -431,8 +410,7 @@ namespace nepochatova {
         return begin();
       }
       Node* curr = pos.current;
-      if (curr == nullptr)
-      {
+      if (curr == nullptr) {
         push_back(value);
         return LIter<T>(head->prev, head);
       }
@@ -449,8 +427,7 @@ namespace nepochatova {
         return begin();
       }
       Node* curr = pos.current;
-      if (curr == nullptr)
-      {
+      if (curr == nullptr) {
         push_back(std::move(value));
         return LIter<T>(head->prev, head);
       }
@@ -462,16 +439,13 @@ namespace nepochatova {
     }
 
     LIter<T> erase(LIter<T> pos) {
-      if (empty())
-      {
+      if (empty()) {
         throw std::runtime_error("List is empty");
       }
-      if (pos.current == nullptr)
-      {
+      if (pos.current == nullptr){
         throw std::runtime_error("Cannot erase end()");
       }
-      if (size() == 1)
-      {
+      if (size() == 1) {
         delete pos.current;
         head = nullptr;
         list_size = 0;
@@ -479,7 +453,7 @@ namespace nepochatova {
       }
       Node* toDelete = pos.current;
       Node* nextNode = toDelete->next;
-      if (toDelete == head) {
+      if (toDelete == head){
         head = head->next;
       }
       toDelete->prev->next = toDelete->next;
