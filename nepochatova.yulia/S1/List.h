@@ -170,23 +170,6 @@ namespace nepochatova{
     Node* head;
     size_t list_size;
 
-    void clear() noexcept {
-      if (head == nullptr) {
-        return;
-      }
-      Node* start = head;
-      Node* current = head->next;
-
-      while (current != start) {
-        Node* next = current->next;
-        delete current;
-        current = next;
-      }
-      delete start;
-      head = nullptr;
-      list_size = 0;
-    }
-
     void copyFrom(const List& other) {
       if (other.empty()) return;
 
@@ -301,6 +284,23 @@ namespace nepochatova{
         throw std::runtime_error("List is empty");
       }
       return head->prev->data;
+    }
+
+    void clear() noexcept {
+      if (head == nullptr) {
+        return;
+      }
+      Node* start = head;
+      Node* current = head->next;
+
+      while (current != start) {
+        Node* next = current->next;
+        delete current;
+        current = next;
+      }
+      delete start;
+      head = nullptr;
+      list_size = 0;
     }
 
     void push_front(const T& value)
