@@ -162,9 +162,9 @@ namespace nepochatova{
       Node* prev;
 
       explicit Node(const T& val, Node* n = nullptr, Node* p = nullptr):
-      data(val), next(n), prev(p) {}
+        data(val), next(n), prev(p) {}
       explicit Node(T&& val, Node* n = nullptr, Node* p = nullptr):
-      data(std::move(val)), next(n), prev(p) {}
+        data(std::move(val)), next(n), prev(p) {}
     };
 
     Node* head;
@@ -414,7 +414,7 @@ namespace nepochatova{
         push_back(value);
         return LIter<T>(head->prev, head);
       }
-      Node* new_node = new Node(value, curr->prev, curr);
+      Node* new_node = new Node(value, curr, curr->prev);
       curr->prev->next = new_node;
       curr->prev = new_node;
       ++list_size;
@@ -431,7 +431,7 @@ namespace nepochatova{
         push_back(std::move(value));
         return LIter<T>(head->prev, head);
       }
-      Node* new_node = new Node(std::move(value),curr->prev,curr);
+      Node* new_node = new Node(std::move(value), curr, curr->prev);
       curr->prev->next = new_node;
       curr->prev = new_node;
       ++list_size;
