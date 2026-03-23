@@ -65,9 +65,12 @@ BOOST_AUTO_TEST_CASE(insert) {
   lst.push_back(30);
   auto it = lst.begin();
   ++it;
-  lst.insert(it, 20);
+
+  auto newIt = lst.insert(it, 20);
+
   BOOST_CHECK_EQUAL(lst.size(), 3);
-  BOOST_CHECK_EQUAL(*it, 20);
+  BOOST_CHECK_EQUAL(*newIt, 20);
+  BOOST_CHECK_EQUAL(*it, 30);
 }
 
 BOOST_AUTO_TEST_CASE(pop_front)
