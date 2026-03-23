@@ -414,7 +414,7 @@ namespace nepochatova{
         push_back(value);
         return LIter<T>(head->prev, head);
       }
-      Node* new_node = new Node(value, curr, curr->prev);
+      Node* new_node = new Node(value, curr->prev, curr);
       curr->prev->next = new_node;
       curr->prev = new_node;
       ++list_size;
@@ -431,7 +431,7 @@ namespace nepochatova{
         push_back(std::move(value));
         return LIter<T>(head->prev, head);
       }
-      Node* new_node = new Node(std::move(value), curr, curr->prev);
+      Node* new_node = new Node(std::move(value),curr->prev,curr));
       curr->prev->next = new_node;
       curr->prev = new_node;
       ++list_size;
