@@ -162,9 +162,9 @@ namespace nepochatova{
       Node* prev;
 
       explicit Node(const T& val, Node* p = nullptr, Node* n = nullptr):
-      data(val), prev(p), next(n) {}
+      data(val), next(n), prev(p) {}
       explicit Node(T&& val, Node* p = nullptr, Node* n = nullptr):
-      data(std::move(val)), prev(p), next(n) {}
+      data(std::move(val)), next(n), prev(p) {}
     };
 
     Node* head;
