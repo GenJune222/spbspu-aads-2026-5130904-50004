@@ -1,4 +1,6 @@
 #include "operations.h"
+#include "stack.hpp"
+#include "queue.hpp"
 #include <string>
 #include <stdexcept>
 
@@ -87,10 +89,9 @@ void applyOperation(const std::string& op, Stack<long long>& values) {
   values.push(res);
 }
 
-long long evaluateExpression(const std::string& line) {
-  Stack<long long> values;
+  Queue<std::string> infixToPostfix(const std::string& line) {
+  Queue<std::string> output;
   Stack<std::string> ops;
-
   std::string token;
   size_t start = 0;
   size_t end = 0;
@@ -99,43 +100,60 @@ long long evaluateExpression(const std::string& line) {
     end = line.find(' ', start);
     token = line.substr(start, end - start);
     start = (end == std::string::npos) ? std::string::npos : end + 1;
-
     if (token.empty()) continue;
 
     if (token == "(") {
       ops.push(token);
     } else if (token == ")") {
       while (!ops.empty() && ops.top() != "(") {
-        applyOperation(ops.drop(), values);
+        output.push(ops.drop());
       }
-      if (ops.empty()) {
-        throw std::runtime_error("Mismatched parentheses");
-      }
+      if (ops.empty()) throw std::runtime_error("Mismatched parentheses");
       ops.drop();
     } else if (isOperator(token)) {
-      while (!ops.empty() && ops.top() != "(" && getPriority(ops.top()) >= getPriority(token)) {
-        applyOperation(ops.drop(), values);
-      }
+      while (!ops.empty() && ops.top() != "(" &&
+             getPriority(ops.top()) >= getPriority(token)) {
+        output.push(ops.drop());
+             }
       ops.push(token);
     } else {
+      output.push(token);
+    }
+  }
+  while (!ops.empty()) {
+    std::string topOp = ops.drop();
+    if (topOp == "(" || topOp == ")") {
+      throw std::runtime_error("Mismatched parentheses");
+    }
+    output.push(topOp);
+  }
+  return output;
+}
+
+  long long evaluatePostfix(Queue<std::string> postfix) {
+  Stack<long long> operands;
+
+  while (!postfix.empty()) {
+    std::string token = postfix.drop();
+
+    if (isOperator(token)) {
+      applyOperation(token, operands);
+    } else {
       try {
-        values.push(std::stoll(token));
+        operands.push(std::stoll(token));
       } catch (...) {
         throw std::runtime_error("Invalid number: " + token);
       }
     }
   }
-
-  while (!ops.empty()) {
-    if (ops.top() == "(" || ops.top() == ")") {
-      throw std::runtime_error("Mismatched parentheses");
-    }
-    applyOperation(ops.drop(), values);
-  }
-  if (values.size() != 1) {
+  if (operands.size() != 1) {
     throw std::runtime_error("Invalid expression result");
   }
-  return values.drop();
+  return operands.drop();
 }
 
+long long evaluateExpression(const std::string& line) {
+  Queue<std::string> postfix = infixToPostfix(line);
+  return evaluatePostfix(std::move(postfix));
+}
 }

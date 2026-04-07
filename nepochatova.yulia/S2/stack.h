@@ -1,7 +1,7 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include "../common/BiList.hpp"
+#include "../common/List.hpp"
 #include <stdexcept>
 #include <utility>
 
