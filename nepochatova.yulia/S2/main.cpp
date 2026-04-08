@@ -4,7 +4,8 @@
 #include "stack.h"
 #include "operations.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
   std::istream* input = &std::cin;
   std::ifstream file;
 
