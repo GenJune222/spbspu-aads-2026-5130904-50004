@@ -4,8 +4,7 @@
 #include "stack.h"
 #include "operations.h"
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   std::istream* input = &std::cin;
   std::ifstream file;
 
@@ -38,15 +37,17 @@ int main(int argc, char* argv[])
     std::cerr << "Error: " << e.what() << '\n';
     return 1;
   }
-  bool first = true;
-  while (!results.empty()) {
-    if (!first) {
-      std::cout << ' ';
+  if (!results.empty()) {
+    std::cout << '\n';
+    bool first = true;
+    while (!results.empty()) {
+      if (!first) {
+        std::cout << ' ';
+      }
+      std::cout << results.drop();
+      first = false;
     }
-    std::cout << results.drop();
-    first = false;
   }
   std::cout << '\n';
-
   return 0;
 }
