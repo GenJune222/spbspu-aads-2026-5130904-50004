@@ -1,8 +1,8 @@
 #ifndef OPERATIONS_HPP
 #define OPERATIONS_HPP
 
-#include "stack.hpp"
-#include "queue.hpp"
+#include "stack.h"
+#include "queue.h"
 
 namespace nepochatova {
 

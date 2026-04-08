@@ -1,6 +1,6 @@
 #include "operations.h"
-#include "stack.hpp"
-#include "queue.hpp"
+#include "stack.h"
+#include "queue.h"
 #include <string>
 #include <stdexcept>
 

@@ -1,7 +1,7 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include "../common/List.hpp"
+#include "../common/List.h"
 #include <stdexcept>
 #include <utility>
 
