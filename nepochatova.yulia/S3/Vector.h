@@ -54,6 +54,7 @@ namespace nepochatova {
     Iterator<T> erase(CIterator<T> beg, CIterator<T> end);
 
     void sort();
+    void clear();
    private:
     T* data_;
     size_t size_, capacity_;
@@ -402,6 +403,10 @@ void nepochatova::Vector<T>::quickSort(size_t low, size_t high) {
     }
     quickSort(pi + 1, high);
   }
+}
+
+void clear() noexcept {
+  size_t size_ = 0;
 }
 
 #endif
