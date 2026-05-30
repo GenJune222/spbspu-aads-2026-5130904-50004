@@ -32,7 +32,6 @@ namespace nepochatova {
 
   template<class Key, class Value, class Hash = XXHash, class Equal = Equal<Key> >
   class HashTable {
-    friend class Graph;
     friend class HashIter<Key, Value, Hash, Equal>;
     friend class HashConstIter<Key, Value, Hash, Equal>;
 

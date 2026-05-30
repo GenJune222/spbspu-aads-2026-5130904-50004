@@ -7,7 +7,6 @@
 #include "Vec_Iterators.h"
 
 namespace nepochatova {
-
   template <class T>
   class Vector {
    public:
@@ -55,7 +54,6 @@ namespace nepochatova {
     Iterator<T> erase(CIterator<T> beg, CIterator<T> end);
 
     void sort();
-
    private:
     T* data_;
     size_t size_, capacity_;
