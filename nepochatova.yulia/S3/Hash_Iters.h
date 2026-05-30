@@ -192,7 +192,7 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator*() const {
   return *chain_it_;
 }
 
-template<class Key, class Value, class Hash, class Equal>
+ template<class Key, class Value, class Hash, class Equal>
 const std::pair<Key, Value> *
 nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator->() const {
   return &(*chain_it_);

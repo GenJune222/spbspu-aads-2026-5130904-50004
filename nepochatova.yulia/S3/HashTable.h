@@ -32,6 +32,7 @@ namespace nepochatova {
 
   template<class Key, class Value, class Hash = XXHash, class Equal = Equal<Key> >
   class HashTable {
+    friend class Graph;
     friend class HashIter<Key, Value, Hash, Equal>;
     friend class HashConstIter<Key, Value, Hash, Equal>;
 
@@ -40,47 +41,31 @@ namespace nepochatova {
     using HCIter = HashConstIter<Key, Value, Hash, Equal>;
 
     explicit HashTable(size_t slots = 101);
-
     ~HashTable();
-
     HashTable(const HashTable &other);
-
     HashTable(HashTable &&other) noexcept;
 
     HashTable &operator=(const HashTable &other);
-
     HashTable &operator=(HashTable &&other) noexcept;
 
     void add(const Key &key, const Value &value);
-
     Value drop(const Key &key);
-
     bool has(const Key &key) const noexcept;
-
     void rehash(size_t new_slots);
 
     Value &get(const Key &key);
-
     const Value &get(const Key &key) const;
 
     void clear() noexcept;
-
     size_t size() const noexcept;
-
     bool empty() const noexcept;
-
     void swap(HashTable &other) noexcept;
 
     HIter begin();
-
     HIter end();
-
     HCIter begin() const;
-
     HCIter end() const;
-
     HCIter cbegin() const;
-
     HCIter cend() const;
 
   private:
@@ -93,7 +78,7 @@ namespace nepochatova {
 
     size_t getIndex(const Key &key) const;
 
-    static ssize_t findIndexInBucket(const Bucket &bucket, const Key &key, Equal eq);
+    static long long findIndexInBucket(const Bucket &bucket, const Key &key, Equal eq);
   };
 }
 
@@ -103,12 +88,12 @@ size_t nepochatova::HashTable<Key, Value, Hash, Equal>::getIndex(const Key &key)
 }
 
 template<class Key, class Value, class Hash, class Equal>
-ssize_t nepochatova::HashTable<Key, Value, Hash, Equal>::findIndexInBucket(
+long long nepochatova::HashTable<Key, Value, Hash, Equal>::findIndexInBucket(
   const Bucket &bucket, const Key &key, Equal eq
 ) {
   for (size_t i = 0; i < bucket.getSize(); ++i) {
     if (eq(bucket[i].first, key)) {
-      return static_cast<ssize_t>(i);
+      return static_cast<long long>(i);
     }
   }
   return -1;
@@ -181,7 +166,7 @@ void nepochatova::HashTable<Key, Value, Hash, Equal>::add(const Key &key, const 
     return;
   }
   try {
-    chain.push_back(std::make_pair(key, value));
+    chain.pushBack(std::make_pair(key, value));
     ++size_;
   } catch (const std::bad_alloc &) {
     throw std::overflow_error("Hash table insertion failed: insufficient memory");
