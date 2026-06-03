@@ -9,7 +9,7 @@ namespace nepochatova {
   void cmdGraphs(std::istream &, std::ostream &out, GraphSet &graphs) {
     Vector<std::string> names;
     for (auto it = graphs.begin(); it != graphs.end(); ++it)
-      names.pushBack((*it).first);
+      names.pushBack(it->first);
 
     for (size_t i = 0; i < names.getSize(); ++i)
       for (size_t j = i + 1; j < names.getSize(); ++j)

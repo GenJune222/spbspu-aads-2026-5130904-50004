@@ -10,6 +10,10 @@ namespace nepochatova {
   template <class T>
   class Vector {
    public:
+
+    using Iterator = nepochatova::Iterator<T>;
+    using CIterator = nepochatova::CIterator<T>;
+
     Vector();
     ~Vector();
     explicit Vector(size_t size);
@@ -39,22 +43,24 @@ namespace nepochatova {
     void erase(size_t id);
     void erase(size_t beg, size_t end);
 
-    Iterator<T> begin();
-    Iterator<T> end();
-    CIterator<T> begin() const;
-    CIterator<T> end() const;
-    CIterator<T> cbegin() const;
-    CIterator<T> cend() const;
+    Iterator begin();
+    Iterator end();
+    CIterator begin() const;
+    CIterator end() const;
+    CIterator cbegin() const;
+    CIterator cend() const;
 
-    Iterator<T> insert(Iterator<T> pos, const T& value);
-    Iterator<T> insert(Iterator<T> pos, CIterator<T> beg, CIterator<T> end);
-    Iterator<T> insert(Iterator<T> pos, size_t count, const T& value);
-    Iterator<T> erase(Iterator<T> pos);
-    Iterator<T> erase(Iterator<T> beg, Iterator<T> end);
-    Iterator<T> erase(CIterator<T> beg, CIterator<T> end);
+    Iterator insert(Iterator pos, const T& value);
+    Iterator insert(Iterator pos, CIterator beg, CIterator end);
+    Iterator insert(Iterator pos, size_t count, const T& value);
+
+    Iterator erase(Iterator pos);
+    Iterator erase(Iterator beg, Iterator end);
+    Iterator erase(CIterator beg, CIterator end);
 
     void sort();
     void clear();
+
    private:
     T* data_;
     size_t size_, capacity_;
@@ -261,110 +267,136 @@ void nepochatova::Vector<T>::erase(size_t beg, size_t end) {
   swap(temp);
 }
 
-
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::begin() {
-  return Iterator<T>(*this, 0);
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::begin() {
+  return Iterator(*this, 0);
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::end() {
-  return Iterator<T>(*this, size_);
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::end() {
+  return Iterator(*this, size_);
 }
 
 template<class T>
-nepochatova::CIterator<T> nepochatova::Vector<T>::begin() const {
-  return CIterator<T>(*this, 0);
+typename nepochatova::Vector<T>::CIterator
+nepochatova::Vector<T>::begin() const {
+  return CIterator(*this, 0);
 }
 
 template<class T>
-nepochatova::CIterator<T> nepochatova::Vector<T>::end() const {
-  return CIterator<T>(*this, size_);
+typename nepochatova::Vector<T>::CIterator
+nepochatova::Vector<T>::end() const {
+  return CIterator(*this, size_);
 }
 
 template<class T>
-nepochatova::CIterator<T> nepochatova::Vector<T>::cbegin() const {
-  return CIterator<T>(*this, 0);
+typename nepochatova::Vector<T>::CIterator
+nepochatova::Vector<T>::cbegin() const {
+  return CIterator(*this, 0);
 }
 
 template<class T>
-nepochatova::CIterator<T> nepochatova::Vector<T>::cend() const {
-  return CIterator<T>(*this, size_);
+typename nepochatova::Vector<T>::CIterator
+nepochatova::Vector<T>::cend() const {
+  return CIterator(*this, size_);
 }
 
-
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::insert(Iterator<T> pos, const T &value) {
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::insert(Iterator pos, const T &value) {
   size_t index = pos.id;
   insert(index, value);
-  return Iterator<T>(*this, index);
+  return Iterator(*this, index);
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::insert(Iterator<T> pos, CIterator<T> beg, CIterator<T> end) {
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::insert(Iterator pos, CIterator beg, CIterator end) {
   if (beg.id == end.id) {
     return pos;
   }
+
   size_t index = pos.id;
   Vector<T> temp;
+
   for (size_t i = 0; i < index; ++i) {
     temp.pushBack(data_[i]);
   }
+
   for (size_t i = beg.id; i < end.id; ++i) {
     temp.pushBack(beg.vector[i]);
   }
+
   for (size_t i = index; i < size_; ++i) {
     temp.pushBack(data_[i]);
   }
+
   swap(temp);
-  return Iterator<T>(*this, index);
+  return Iterator(*this, index);
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::insert(Iterator<T> pos, size_t count, const T &value) {
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::insert(Iterator pos, size_t count, const T &value) {
   if (count == 0) {
     return pos;
   }
+
   size_t index = pos.id;
   Vector<T> temp;
+
   for (size_t i = 0; i < index; ++i) {
     temp.pushBack(data_[i]);
   }
+
   for (size_t i = 0; i < count; ++i) {
     temp.pushBack(value);
   }
+
   for (size_t i = index; i < size_; ++i) {
     temp.pushBack(data_[i]);
   }
+
   swap(temp);
-  return Iterator<T>(*this, index);
+  return Iterator(*this, index);
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::erase(Iterator<T> pos) {
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::erase(Iterator pos) {
   size_t index = pos.id;
   erase(index);
-  return Iterator<T>(*this, index);
+  return Iterator(*this, index);
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::erase(Iterator<T> beg, Iterator<T> end) {
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::erase(Iterator beg, Iterator end) {
   if (beg.id == end.id) {
     return beg;
   }
-  size_t b = beg.id, e = end.id;
+
+  size_t b = beg.id;
+  size_t e = end.id;
+
   erase(b, e);
-  return Iterator<T>(*this, b);
+  return Iterator(*this, b);
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Vector<T>::erase(CIterator<T> beg, CIterator<T> end) {
+typename nepochatova::Vector<T>::Iterator
+nepochatova::Vector<T>::erase(CIterator beg, CIterator end) {
   if (beg.id == end.id) {
-    return Iterator<T>(*this, beg.id);
+    return Iterator(*this, beg.id);
   }
-  size_t b = beg.id, e = end.id;
+
+  size_t b = beg.id;
+  size_t e = end.id;
+
   erase(b, e);
-  return Iterator<T>(*this, b);
+  return Iterator(*this, b);
 }
 
 
@@ -405,8 +437,9 @@ void nepochatova::Vector<T>::quickSort(size_t low, size_t high) {
   }
 }
 
-void clear() noexcept {
-  size_t size_ = 0;
+template<class T>
+void nepochatova::Vector<T>::clear() {
+  size_ = 0;
 }
 
 #endif
