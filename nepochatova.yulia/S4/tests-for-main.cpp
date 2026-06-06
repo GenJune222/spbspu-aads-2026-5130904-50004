@@ -5,8 +5,7 @@
 
 BOOST_AUTO_TEST_SUITE(BSTreeTests)
 
-  BOOST_AUTO_TEST_CASE(test_push_and_get)
-  {
+  BOOST_AUTO_TEST_CASE(test_push_and_get) {
     nepochatova::BSTree<int, std::string> tree;
 
     tree.push(5, "five");
@@ -21,16 +20,14 @@ BOOST_AUTO_TEST_SUITE(BSTreeTests)
     BOOST_CHECK_EQUAL(tree.get(5), "FIVE");
   }
 
-  BOOST_AUTO_TEST_CASE(test_get_throws)
-  {
+  BOOST_AUTO_TEST_CASE(test_get_throws) {
     nepochatova::BSTree<int, std::string> tree;
     tree.push(1, "one");
 
     BOOST_CHECK_THROW(tree.get(2), std::out_of_range);
   }
 
-  BOOST_AUTO_TEST_CASE(test_drop)
-  {
+  BOOST_AUTO_TEST_CASE(test_drop) {
     nepochatova::BSTree<int, std::string> tree;
     tree.push(5, "five");
     tree.push(3, "three");
@@ -47,17 +44,15 @@ BOOST_AUTO_TEST_SUITE(BSTreeTests)
     BOOST_CHECK_EQUAL(tree.get(7), "seven");
   }
 
-  BOOST_AUTO_TEST_CASE(test_clear)
-  {
+  BOOST_AUTO_TEST_CASE(test_clear) {
     nepochatova::BSTree<int, std::string> tree;
     tree.push(1, "one");
     tree.push(2, "two");
-    
+
     BOOST_CHECK(!tree.empty());
   }
 
-  BOOST_AUTO_TEST_CASE(test_copy)
-  {
+  BOOST_AUTO_TEST_CASE(test_copy) {
     nepochatova::BSTree<int, std::string> tree1;
     tree1.push(1, "one");
     tree1.push(2, "two");
@@ -71,8 +66,7 @@ BOOST_AUTO_TEST_SUITE(BSTreeTests)
     BOOST_CHECK_THROW(tree2.get(3), std::out_of_range);
   }
 
-  BOOST_AUTO_TEST_CASE(test_move)
-  {
+  BOOST_AUTO_TEST_CASE(test_move) {
     nepochatova::BSTree<int, std::string> tree1;
     tree1.push(1, "one");
     tree1.push(2, "two");
@@ -83,8 +77,7 @@ BOOST_AUTO_TEST_SUITE(BSTreeTests)
     BOOST_CHECK_EQUAL(tree2.get(2), "two");
   }
 
-  BOOST_AUTO_TEST_CASE(test_height)
-  {
+  BOOST_AUTO_TEST_CASE(test_height) {
     nepochatova::BSTree<int, std::string> tree;
 
     tree.push(5, "five");
@@ -99,8 +92,7 @@ BOOST_AUTO_TEST_SUITE(BSTreeTests)
     BOOST_CHECK_EQUAL(tree.height(), 4);
   }
 
-  BOOST_AUTO_TEST_CASE(test_iterators_inorder)
-  {
+  BOOST_AUTO_TEST_CASE(test_iterators_inorder) {
     nepochatova::BSTree<int, std::string> tree;
     tree.push(3, "three");
     tree.push(1, "one");
@@ -110,25 +102,24 @@ BOOST_AUTO_TEST_SUITE(BSTreeTests)
     auto it = tree.cbegin();
     BOOST_CHECK_EQUAL((*it).first, 1);
     BOOST_CHECK_EQUAL((*it).second, "one");
-    
+
     ++it;
     BOOST_CHECK_EQUAL((*it).first, 2);
     BOOST_CHECK_EQUAL((*it).second, "two");
-    
+
     ++it;
     BOOST_CHECK_EQUAL((*it).first, 3);
     BOOST_CHECK_EQUAL((*it).second, "three");
-    
+
     ++it;
     BOOST_CHECK_EQUAL((*it).first, 4);
     BOOST_CHECK_EQUAL((*it).second, "four");
-    
+
     ++it;
     BOOST_CHECK(it == tree.cend());
   }
 
-  BOOST_AUTO_TEST_CASE(test_rotate_stability)
-  {
+  BOOST_AUTO_TEST_CASE(test_rotate_stability) {
     nepochatova::BSTree<int, std::string> tree;
     tree.push(5, "five");
     tree.push(3, "three");

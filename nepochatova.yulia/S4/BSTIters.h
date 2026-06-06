@@ -4,8 +4,8 @@
 #include "BSTree.h"
 
 namespace nepochatova {
-
-  template <class Key, class Value, class Compare> class BSTree;
+  template<class Key, class Value, class Compare>
+  class BSTree;
 
   template<class Key, class Value>
   class BSTConstIterator {
@@ -17,7 +17,9 @@ namespace nepochatova {
     BSTNode<Key, Value> *fake_leaf_;
     BSTNode<Key, Value> *root_;
 
-    BSTConstIterator(BSTNode<Key, Value> *node, BSTNode<Key, Value> *fake_leaf, BSTNode<Key, Value> *root) : node_(node), fake_leaf_(fake_leaf), root_(root) {}
+    BSTConstIterator(BSTNode<Key, Value> *node, BSTNode<Key, Value> *fake_leaf,
+                     BSTNode<Key, Value> *root) : node_(node), fake_leaf_(fake_leaf), root_(root) {
+    }
 
   public:
     BSTConstIterator() = default;
@@ -70,7 +72,6 @@ namespace nepochatova {
         while (node_->right != fake_leaf_) {
           node_ = node_->right;
         }
-
       } else {
         BSTNode<Key, Value> *parent = node_->parent;
         while (parent != nullptr && parent != fake_leaf_ && parent->left == node_) {
@@ -102,7 +103,9 @@ namespace nepochatova {
     template<class K, class V, class C>
     friend class BSTree;
 
-    BSTIterator(BSTNode<Key, Value> *node, BSTNode<Key, Value> *fake_leaf, BSTNode<Key, Value> *root) : BSTConstIterator<Key, Value>(node, fake_leaf, root) {}
+    BSTIterator(BSTNode<Key, Value> *node, BSTNode<Key, Value> *fake_leaf,
+                BSTNode<Key, Value> *root) : BSTConstIterator<Key, Value>(node, fake_leaf, root) {
+    }
 
   public:
     BSTIterator() = default;
