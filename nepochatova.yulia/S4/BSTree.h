@@ -51,6 +51,11 @@ namespace nepochatova {
     size_t height() const;
     size_t height(const_iterator it) const;
 
+    const_iterator rotateLeft(const_iterator it);
+    const_iterator rotateRight(const_iterator it);
+    const_iterator rotateLargeLeft(const_iterator it);
+    const_iterator rotateLargeRight(const_iterator it);
+
   private:
     template<class K, class V> friend class BSTConstIterator;
     template<class K, class V> friend class BSTIterator;
@@ -326,5 +331,78 @@ namespace nepochatova {
     return calc_height(it.node_);
   }
 
+  template<class Key, class Value, class Compare>
+  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateLeft(const_iterator it) {
+    BSTNode<Key, Value> *child = it.node_;
+    BSTNode<Key, Value> *parent = child->parent;
+
+    if (!parent || child == fake_leaf_) {
+      throw std::invalid_argument("Cannot rotate root or fake_leaf");
+    }
+
+    parent->right = child->left;
+    if (child->left != fake_leaf_) {
+      child->left->parent = parent;
+    }
+
+    child->parent = parent->parent;
+    child->left = parent;
+
+    parent->parent = child;
+    if (child->parent) {
+      if (child->parent->left == parent)
+        child->parent->left = child;
+      else
+        child->parent->right = child;
+    } else {
+      root_ = child;
+    }
+
+    return it;
+  }
+
+  template<class Key, class Value, class Compare>
+  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateRight(const_iterator it) {
+    BSTNode<Key, Value> *child = it.node_;
+    BSTNode<Key, Value> *parent = child->parent;
+
+    if (!parent || child == fake_leaf_) {
+      throw std::invalid_argument("Cannot rotate root or fake_leaf");
+    }
+
+    parent->left = child->right;
+    if (child->right != fake_leaf_) {
+      child->right->parent = parent;
+    }
+
+    child->parent = parent->parent;
+    child->right = parent;
+
+    parent->parent = child;
+    if (child->parent) {
+      if (child->parent->left == parent)
+        child->parent->left = child;
+      else
+        child->parent->right = child;
+    } else {
+      root_ = child;
+    }
+
+    return it;
+  }
+
+  template<class Key, class Value, class Compare>
+  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateLargeLeft(const_iterator it) {
+    auto left_child_it = const_iterator(it.node_->left, fake_leaf_, root_);
+    rotateRight(left_child_it);
+    return rotateLeft(it);
+  }
+
+  template<class Key, class Value, class Compare>
+  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateLargeRight(const_iterator it) {
+    auto right_child_it = const_iterator(it.node_->right, fake_leaf_, root_);
+    rotateLeft(right_child_it);
+    return rotateRight(it);
+  }
 }
 #endif
