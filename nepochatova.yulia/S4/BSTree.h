@@ -332,7 +332,7 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateLeft(const_iterator it) {
+  auto BSTree<Key, Value, Compare>::rotateLeft(const_iterator it)-> const_iterator {
     BSTNode<Key, Value> *child = it.node_;
     BSTNode<Key, Value> *parent = child->parent;
 
@@ -362,7 +362,7 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateRight(const_iterator it) {
+  auto BSTree<Key, Value, Compare>::rotateRight(const_iterator it)-> const_iterator {
     BSTNode<Key, Value> *child = it.node_;
     BSTNode<Key, Value> *parent = child->parent;
 
@@ -392,14 +392,14 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateLargeLeft(const_iterator it) {
+  auto BSTree<Key, Value, Compare>::rotateLargeLeft(const_iterator it)-> const_iterator {
     auto left_child_it = const_iterator(it.node_->left, fake_leaf_, root_);
     rotateRight(left_child_it);
     return rotateLeft(it);
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::rotateLargeRight(const_iterator it) {
+  auto BSTree<Key, Value, Compare>::rotateLargeRight(const_iterator it)-> const_iterator  {
     auto right_child_it = const_iterator(it.node_->right, fake_leaf_, root_);
     rotateLeft(right_child_it);
     return rotateRight(it);
