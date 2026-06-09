@@ -7,8 +7,8 @@
 
 namespace nepochatova {
   template < class T >
-  class Stack {
-  private:
+  class Stack
+  {
     List< T > data_;
 
   public:
@@ -22,12 +22,14 @@ namespace nepochatova {
   };
 
 template < class T >
- void Stack<T>::push(const T& value) {
+ void Stack<T>::push(const T& value)
+{
   data_.push_back(value);
 }
 
 template < class T >
-T Stack<T>::drop() {
+T Stack<T>::drop()
+{
   if (empty()) {
     throw std::out_of_range("Stack is empty");
   }
@@ -37,7 +39,8 @@ T Stack<T>::drop() {
 }
 
 template < class T >
-T& Stack<T>::top() {
+T& Stack<T>::top()
+{
   if (empty()) {
     throw std::out_of_range("Stack is empty");
   }
@@ -45,7 +48,8 @@ T& Stack<T>::top() {
 }
 
 template < class T >
-const T& Stack<T>::top() const {
+const T& Stack<T>::top() const
+{
   if (empty()) {
     throw std::out_of_range("Stack is empty");
   }
@@ -53,17 +57,20 @@ const T& Stack<T>::top() const {
 }
 
 template < class T >
-bool Stack<T>::empty() const noexcept {
+bool Stack<T>::empty() const noexcept
+{
   return data_.empty();
 }
 
 template < class T >
-size_t Stack<T>::size() const noexcept {
+size_t Stack<T>::size() const noexcept
+{
   return data_.size();
 }
 
 template < class T >
-void Stack<T>::clear() {
+void Stack<T>::clear()
+{
   data_.clear();
 }
 }

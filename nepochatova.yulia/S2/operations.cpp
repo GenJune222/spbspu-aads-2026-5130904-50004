@@ -6,42 +6,50 @@
 
 namespace nepochatova {
 
-long long sum(long long a, long long b) {
+long long sum(long long a, long long b)
+{
   return a + b;
 }
 
-long long subtract(long long a, long long b) {
+long long subtract(long long a, long long b)
+{
   return a - b;
 }
 
-long long multiply(long long a, long long b) {
+long long multiply(long long a, long long b)
+{
   return a * b;
 }
 
-long long divide(long long a, long long b) {
+long long divide(long long a, long long b)
+{
   if (b == 0) {
     throw std::runtime_error("Division by zero");
   }
   return a / b;
 }
 
-long long mod(long long a, long long b) {
+long long mod(long long a, long long b)
+{
   if (b == 0) {
     throw std::runtime_error("Module by zero");
   }
   return a % b;
 }
 
-long long bitwise_not(long long a) {
+long long bitwise_not(long long a)
+{
   return !a;
 }
 
-bool isOperator(const std::string& token) {
+bool isOperator(const std::string& token)
+{
   return token == "+" || token == "-" || token == "*" ||
          token == "/" || token == "%" || token == "!";
 }
 
-int getPriority(const std::string& op) {
+int getPriority(const std::string& op)
+{
   if (op == "+" || op == "-") {
     return 1;
   }
@@ -54,7 +62,8 @@ int getPriority(const std::string& op) {
   return 0;
 }
 
-void applyOperation(const std::string& op, Stack<long long>& values) {
+void applyOperation(const std::string& op, Stack<long long>& values)
+{
   if (op == "!") {
     if (values.empty()) {
       throw std::runtime_error("Invalid expression: missing operand for !");
@@ -89,7 +98,8 @@ void applyOperation(const std::string& op, Stack<long long>& values) {
   values.push(res);
 }
 
-  Queue<std::string> infixToPostfix(const std::string& line) {
+Queue<std::string> infixToPostfix(const std::string& line)
+{
   Queue<std::string> output;
   Stack<std::string> ops;
   std::string token;
@@ -100,7 +110,9 @@ void applyOperation(const std::string& op, Stack<long long>& values) {
     end = line.find(' ', start);
     token = line.substr(start, end - start);
     start = (end == std::string::npos) ? std::string::npos : end + 1;
-    if (token.empty()) continue;
+    if (token.empty()) {
+      continue;
+    }
 
     if (token == "(") {
       ops.push(token);
@@ -108,18 +120,21 @@ void applyOperation(const std::string& op, Stack<long long>& values) {
       while (!ops.empty() && ops.top() != "(") {
         output.push(ops.drop());
       }
-      if (ops.empty()) throw std::runtime_error("Mismatched parentheses");
+      if (ops.empty()) {
+        throw std::runtime_error("Mismatched parentheses");
+      }
       ops.drop();
     } else if (isOperator(token)) {
       while (!ops.empty() && ops.top() != "(" &&
              getPriority(ops.top()) >= getPriority(token)) {
         output.push(ops.drop());
-             }
+      }
       ops.push(token);
     } else {
       output.push(token);
     }
   }
+
   while (!ops.empty()) {
     std::string topOp = ops.drop();
     if (topOp == "(" || topOp == ")") {
@@ -130,7 +145,8 @@ void applyOperation(const std::string& op, Stack<long long>& values) {
   return output;
 }
 
-  long long evaluatePostfix(Queue<std::string> postfix) {
+long long evaluatePostfix(Queue<std::string> postfix)
+{
   Stack<long long> operands;
 
   while (!postfix.empty()) {
@@ -146,14 +162,17 @@ void applyOperation(const std::string& op, Stack<long long>& values) {
       }
     }
   }
+
   if (operands.size() != 1) {
     throw std::runtime_error("Invalid expression result");
   }
   return operands.drop();
 }
 
-long long evaluateExpression(const std::string& line) {
+long long evaluateExpression(const std::string& line)
+{
   Queue<std::string> postfix = infixToPostfix(line);
   return evaluatePostfix(std::move(postfix));
 }
+
 }

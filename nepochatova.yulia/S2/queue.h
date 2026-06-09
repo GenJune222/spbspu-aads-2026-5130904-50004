@@ -7,8 +7,8 @@
 
 namespace nepochatova {
   template < class T >
-  class Queue {
-  private:
+  class Queue
+  {
     List< T > data_;
 
   public:
@@ -22,12 +22,14 @@ namespace nepochatova {
   };
 
   template < class T >
-   void Queue<T>::push(const T& value) {
+   void Queue<T>::push(const T& value)
+  {
     data_.push_back(value);
   }
 
   template < class T >
-  T Queue<T>::drop() {
+  T Queue<T>::drop()
+  {
     if (empty()) {
       throw std::out_of_range("Queue is empty");
     }
@@ -37,7 +39,8 @@ namespace nepochatova {
   }
 
   template < class T >
-  T& Queue<T>::front() {
+  T& Queue<T>::front()
+  {
     if (empty()) {
       throw std::out_of_range("Queue is empty");
     }
@@ -45,7 +48,8 @@ namespace nepochatova {
   }
 
   template < class T >
-  const T& Queue<T>::front() const {
+  const T& Queue<T>::front() const
+  {
     if (empty()) {
       throw std::out_of_range("Queue is empty");
     }
@@ -53,17 +57,20 @@ namespace nepochatova {
   }
 
   template < class T >
-  bool Queue<T>::empty() const noexcept {
+  bool Queue<T>::empty() const noexcept
+  {
     return data_.empty();
   }
 
   template < class T >
-  size_t Queue<T>::size() const noexcept {
+  size_t Queue<T>::size() const noexcept
+  {
     return data_.size();
   }
 
   template < class T >
-  void Queue<T>::clear() {
+  void Queue<T>::clear()
+  {
     data_.clear();
   }
 }
