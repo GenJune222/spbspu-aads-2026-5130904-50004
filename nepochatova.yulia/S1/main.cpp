@@ -28,13 +28,13 @@ int main()
       return 0;
     }
 
-    bool first = true;
-    for (auto it = sequences.cbegin(); it != sequences.cend(); ++it) {
-      if (!first) {
-        std::cout << " ";
+    auto nameIt = sequences.cbegin();
+    if (nameIt != sequences.cend()) {
+      std::cout << nameIt->first;
+      ++nameIt;
+      for (; nameIt != sequences.cend(); ++nameIt) {
+        std::cout << " " << nameIt->first;
       }
-      std::cout << it->first;
-      first = false;
     }
     std::cout << "\n";
 
@@ -63,13 +63,14 @@ int main()
     }
 
     for (auto it = transp.cbegin(); it != transp.cend(); ++it) {
-      bool firstInRow = true;
-      for (auto elemIt = it->cbegin(); elemIt != it->cend(); ++elemIt) {
-        if (!firstInRow) {
-          std::cout << " ";
-        }
+      auto elemIt = it->cbegin();
+      if (elemIt != it->cend()) {
         std::cout << *elemIt;
-        firstInRow = false;
+        ++elemIt;
+
+        for (; elemIt != it->cend(); ++elemIt) {
+          std::cout << " " << *elemIt;
+        }
       }
       std::cout << "\n";
     }
@@ -89,13 +90,13 @@ int main()
     if (sums.empty()) {
       std::cout << "0" << "\n";
     } else {
-      first = true;
-      for (auto it = sums.cbegin(); it != sums.cend(); ++it) {
-        if (!first) {
-          std::cout << " ";
+      auto sumIt = sums.cbegin();
+      if (sumIt != sums.cend()) {
+        std::cout << *sumIt;
+        ++sumIt;
+        for (; sumIt != sums.cend(); ++sumIt) {
+          std::cout << " " << *sumIt;
         }
-        std::cout << *it;
-        first = false;
       }
       std::cout << "\n";
     }
@@ -105,3 +106,4 @@ int main()
     return 1;
   }
 }
+
