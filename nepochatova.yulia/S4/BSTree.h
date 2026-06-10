@@ -16,14 +16,23 @@ namespace nepochatova {
     BSTNode *right;
     BSTNode *parent;
 
-    BSTNode(Key k, Value v, BSTNode *p) : key(std::move(k)), value(std::move(v)), left(nullptr), right(nullptr), parent(p) {}
+    BSTNode(Key k, Value v, BSTNode *p) :
+      key(std::move(k)),
+      value(std::move(v)),
+      left(nullptr),
+      right(nullptr),
+      parent(p)
+    {}
   };
 
-  template<class Key, class Value> class BSTConstIterator;
-  template<class Key, class Value> class BSTIterator;
+  template<class Key, class Value>
+  class BSTConstIterator;
+  template<class Key, class Value>
+  class BSTIterator;
 
   template<class Key, class Value, class Compare = std::less<Key> >
-  class BSTree {
+  class BSTree
+  {
   public:
     using const_iterator = BSTConstIterator<Key, Value>;
     using iterator = BSTIterator<Key, Value>;
@@ -76,16 +85,26 @@ namespace nepochatova {
 
 
   template<class Key, class Value, class Compare>
-  BSTree<Key, Value, Compare>::BSTree() : fake_leaf_(make_fake_leaf()), root_(fake_leaf_), comp_{} {}
+  BSTree<Key, Value, Compare>::BSTree() :
+    fake_leaf_(make_fake_leaf()),
+    root_(fake_leaf_),
+    comp_
+  {}
+  {}
 
   template<class Key, class Value, class Compare>
-  BSTree<Key, Value, Compare>::~BSTree() {
+  BSTree<Key, Value, Compare>::~BSTree()
+  {
     clear();
     delete fake_leaf_;
   }
 
   template<class Key, class Value, class Compare>
-  BSTree<Key, Value, Compare>::BSTree(const BSTree &rhs) : fake_leaf_(make_fake_leaf()), root_(nullptr), comp_(rhs.comp_) {
+  BSTree<Key, Value, Compare>::BSTree(const BSTree &rhs) :
+    fake_leaf_(make_fake_leaf()),
+    root_(nullptr),
+    comp_(rhs.comp_)
+  {
     if (!rhs.empty()) {
       try {
         root_ = clone_subtree(rhs.root_, nullptr);
@@ -99,7 +118,8 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  BSTree<Key, Value, Compare> &BSTree<Key, Value, Compare>::operator=(const BSTree &rhs) {
+  BSTree<Key, Value, Compare> &BSTree<Key, Value, Compare>::operator=(const BSTree &rhs)
+  {
     if (this != &rhs) {
       BSTree tmp(rhs);
       swap(tmp);
@@ -108,13 +128,18 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  BSTree<Key, Value, Compare>::BSTree(BSTree &&rhs) noexcept : fake_leaf_(rhs.fake_leaf_), root_(rhs.root_), comp_(std::move(rhs.comp_)) {
+  BSTree<Key, Value, Compare>::BSTree(BSTree &&rhs) noexcept :
+    fake_leaf_(rhs.fake_leaf_),
+    root_(rhs.root_),
+    comp_(std::move(rhs.comp_))
+  {
     rhs.root_ = nullptr;
     rhs.fake_leaf_ = nullptr;
   }
 
   template<class Key, class Value, class Compare>
-  BSTree<Key, Value, Compare> &BSTree<Key, Value, Compare>::operator=(BSTree &&rhs) noexcept {
+  BSTree<Key, Value, Compare> &BSTree<Key, Value, Compare>::operator=(BSTree &&rhs) noexcept
+  {
     if (this != &rhs) {
       clear();
       delete fake_leaf_;
@@ -129,33 +154,39 @@ namespace nepochatova {
 
   template<class Key, class Value, class Compare>
   void BSTree<Key, Value, Compare>::swap(BSTree &other) noexcept {
+
     std::swap(fake_leaf_, other.fake_leaf_);
     std::swap(root_, other.root_);
     std::swap(comp_, other.comp_);
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::iterator BSTree<Key, Value, Compare>::begin() {
+  typename BSTree<Key, Value, Compare>::iterator BSTree<Key, Value, Compare>::begin()
+  {
     return iterator(find_min(root_), fake_leaf_, root_);
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::iterator BSTree<Key, Value, Compare>::end() {
+  typename BSTree<Key, Value, Compare>::iterator BSTree<Key, Value, Compare>::end()
+  {
     return iterator(fake_leaf_, fake_leaf_, root_);
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::cbegin() const {
+  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::cbegin() const
+  {
     return const_iterator(find_min(root_), fake_leaf_, root_);
   }
 
   template<class Key, class Value, class Compare>
-  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::cend() const {
+  typename BSTree<Key, Value, Compare>::const_iterator BSTree<Key, Value, Compare>::cend() const
+  {
     return const_iterator(fake_leaf_, fake_leaf_, root_);
   }
 
   template<class Key, class Value, class Compare>
-  BSTNode<Key, Value>* BSTree<Key, Value, Compare>::make_fake_leaf() {
+  BSTNode<Key, Value>* BSTree<Key, Value, Compare>::make_fake_leaf()
+  {
     auto *node = new BSTNode<Key, Value>(Key{}, Value{}, nullptr);
     node->left = node;
     node->right = node;
@@ -164,7 +195,8 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  void BSTree<Key, Value, Compare>::clear(BSTNode<Key, Value> *node) noexcept {
+  void BSTree<Key, Value, Compare>::clear(BSTNode<Key, Value> *node) noexcept
+  {
     if (node == fake_leaf_) {
       return;
     }
@@ -174,13 +206,15 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  void BSTree<Key, Value, Compare>::clear() noexcept {
+  void BSTree<Key, Value, Compare>::clear() noexcept
+  {
     clear(root_);
     root_ = fake_leaf_;
   }
 
   template<class Key, class Value, class Compare>
-  BSTNode<Key, Value>* BSTree<Key, Value, Compare>::clone_subtree(BSTNode<Key, Value> *src, BSTNode<Key, Value> *parent) {
+  BSTNode<Key, Value>* BSTree<Key, Value, Compare>::clone_subtree(BSTNode<Key, Value> *src, BSTNode<Key, Value> *parent)
+  {
     if (src == fake_leaf_) {
       return fake_leaf_;
     }
@@ -191,7 +225,8 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  BSTNode<Key, Value>* BSTree<Key, Value, Compare>::find_min(BSTNode<Key, Value>* node) const {
+  BSTNode<Key, Value>* BSTree<Key, Value, Compare>::find_min(BSTNode<Key, Value>* node) const
+  {
     if (node == fake_leaf_) return fake_leaf_;
     while (node->left != fake_leaf_) {
       node = node->left;
@@ -200,18 +235,21 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  size_t BSTree<Key, Value, Compare>::calc_height(BSTNode<Key, Value>* node) const {
+  size_t BSTree<Key, Value, Compare>::calc_height(BSTNode<Key, Value>* node) const
+  {
     if (node == fake_leaf_) return 0;
     return 1 + std::max(calc_height(node->left), calc_height(node->right));
   }
 
   template<class Key, class Value, class Compare>
-  bool BSTree<Key, Value, Compare>::empty() const noexcept {
+  bool BSTree<Key, Value, Compare>::empty() const noexcept
+  {
     return root_ == fake_leaf_;
   }
 
   template<class Key, class Value, class Compare>
-  bool BSTree<Key, Value, Compare>::contains(Key k) const {
+  bool BSTree<Key, Value, Compare>::contains(Key k) const
+  {
     BSTNode<Key, Value> *cur = root_;
     while (cur != fake_leaf_) {
       if (comp_(k, cur->key)) cur = cur->left;
@@ -222,7 +260,8 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  void BSTree<Key, Value, Compare>::push(Key k, Value v) {
+  void BSTree<Key, Value, Compare>::push(Key k, Value v)
+  {
     if (root_ == fake_leaf_) {
       auto *new_node = new BSTNode<Key, Value>(std::move(k), std::move(v), nullptr);
       new_node->left = fake_leaf_;
@@ -259,7 +298,8 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  Value BSTree<Key, Value, Compare>::get(Key k) const {
+  Value BSTree<Key, Value, Compare>::get(Key k) const
+  {
     BSTNode<Key, Value> *cur = root_;
     while (cur != fake_leaf_) {
       if (comp_(k, cur->key)) cur = cur->left;
@@ -270,7 +310,8 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  Value BSTree<Key, Value, Compare>::drop(Key k) {
+  Value BSTree<Key, Value, Compare>::drop(Key k)
+  {
     BSTNode<Key, Value> *to_remove = root_;
     while (to_remove != fake_leaf_) {
       if (comp_(k, to_remove->key)) to_remove = to_remove->left;
@@ -322,17 +363,20 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  size_t BSTree<Key, Value, Compare>::height() const {
+  size_t BSTree<Key, Value, Compare>::height() const
+  {
     return calc_height(root_);
   }
 
   template<class Key, class Value, class Compare>
-  size_t BSTree<Key, Value, Compare>::height(const_iterator it) const {
+  size_t BSTree<Key, Value, Compare>::height(const_iterator it) const
+  {
     return calc_height(it.node_);
   }
 
   template<class Key, class Value, class Compare>
-  auto BSTree<Key, Value, Compare>::rotateLeft(const_iterator it)-> const_iterator {
+  auto BSTree<Key, Value, Compare>::rotateLeft(const_iterator it)-> const_iterator
+  {
     BSTNode<Key, Value> *child = it.node_;
     BSTNode<Key, Value> *parent = child->parent;
 
@@ -362,7 +406,8 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  auto BSTree<Key, Value, Compare>::rotateRight(const_iterator it)-> const_iterator {
+  auto BSTree<Key, Value, Compare>::rotateRight(const_iterator it)-> const_iterator
+  {
     BSTNode<Key, Value> *child = it.node_;
     BSTNode<Key, Value> *parent = child->parent;
 
@@ -392,14 +437,16 @@ namespace nepochatova {
   }
 
   template<class Key, class Value, class Compare>
-  auto BSTree<Key, Value, Compare>::rotateLargeLeft(const_iterator it)-> const_iterator {
+  auto BSTree<Key, Value, Compare>::rotateLargeLeft(const_iterator it)-> const_iterator
+  {
     auto left_child_it = const_iterator(it.node_->left, fake_leaf_, root_);
     rotateRight(left_child_it);
     return rotateLeft(it);
   }
 
   template<class Key, class Value, class Compare>
-  auto BSTree<Key, Value, Compare>::rotateLargeRight(const_iterator it)-> const_iterator  {
+  auto BSTree<Key, Value, Compare>::rotateLargeRight(const_iterator it)-> const_iterator
+  {
     auto right_child_it = const_iterator(it.node_->right, fake_leaf_, root_);
     rotateLeft(right_child_it);
     return rotateRight(it);

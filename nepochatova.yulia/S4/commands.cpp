@@ -4,14 +4,16 @@
 #include <limits>
 
 namespace nepochatova {
-  DictionaryManager::DictionaryManager() : commands_{
+  DictionaryManager::DictionaryManager() :
+    commands_{
     {"print", &DictionaryManager::cmdPrint},
     {"complement", &DictionaryManager::cmdComplement},
     {"intersect", &DictionaryManager::cmdIntersect},
     {"union", &DictionaryManager::cmdUnion}
   } {}
 
-  void DictionaryManager::loadFromFile(const std::string &filename) {
+  void DictionaryManager::loadFromFile(const std::string &filename)
+  {
     std::ifstream file(filename);
     if (!file.is_open()) {
       throw std::runtime_error("Cannot open file: " + filename);
@@ -32,7 +34,8 @@ namespace nepochatova {
     }
   }
 
-  void DictionaryManager::processCmds(std::istream &in, std::ostream &out) {
+  void DictionaryManager::processCmds(std::istream &in, std::ostream &out)
+  {
     std::string command;
 
     while (in >> command) {
@@ -61,7 +64,8 @@ namespace nepochatova {
   }
 
 
-  void DictionaryManager::cmdPrint(std::istream &in, std::ostream &out) {
+  void DictionaryManager::cmdPrint(std::istream &in, std::ostream &out)
+  {
     std::string name;
     in >> name;
 
@@ -82,7 +86,8 @@ namespace nepochatova {
     out << "\n";
   }
 
-  void DictionaryManager::cmdComplement(std::istream &in, std::ostream &) {
+  void DictionaryManager::cmdComplement(std::istream &in, std::ostream &)
+  {
     std::string newName, leftName, rightName;
     in >> newName >> leftName >> rightName;
     if (!in || !datasets_.contains(leftName) || !datasets_.contains(rightName)) {
@@ -101,7 +106,8 @@ namespace nepochatova {
     datasets_.push(newName, res);
   }
 
-  void DictionaryManager::cmdIntersect(std::istream &in, std::ostream &) {
+  void DictionaryManager::cmdIntersect(std::istream &in, std::ostream &)
+  {
     std::string newName, leftName, rightName;
     in >> newName >> leftName >> rightName;
     if (!in || !datasets_.contains(leftName) || !datasets_.contains(rightName)) {
@@ -120,7 +126,8 @@ namespace nepochatova {
     datasets_.push(newName, res);
   }
 
-  void DictionaryManager::cmdUnion(std::istream &in, std::ostream &) {
+  void DictionaryManager::cmdUnion(std::istream &in, std::ostream &)
+  {
     std::string newName, leftName, rightName;
     in >> newName >> leftName >> rightName;
     if (!in || !datasets_.contains(leftName) || !datasets_.contains(rightName)) {

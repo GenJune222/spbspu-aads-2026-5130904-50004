@@ -8,7 +8,8 @@
 
 namespace nepochatova {
 
-  class DictionaryManager {
+  class DictionaryManager
+  {
   public:
     using SingleDict = BSTree<int, std::string>;
     using DictCollection = BSTree<std::string, SingleDict>;
