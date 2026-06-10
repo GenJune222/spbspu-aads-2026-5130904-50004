@@ -4,25 +4,29 @@
 
 namespace nepochatova {
 
-  void Graph::addVertex(const std::string &name) {
+  void Graph::addVertex(const std::string &name)
+  {
     if (hasVertex(name)) return;
     vertices_.pushBack(name);
   }
 
-  bool Graph::hasVertex(const std::string &name) const {
+  bool Graph::hasVertex(const std::string &name) const
+  {
     for (size_t i = 0; i < vertices_.getSize(); ++i) {
       if (vertices_[i] == name) return true;
     }
     return false;
   }
 
-  Vector<std::string> Graph::getVertices() const {
+  Vector<std::string> Graph::getVertices() const
+  {
     Vector<std::string> sorted = vertices_;
     sorted.sort();
     return sorted;
   }
 
-  void Graph::addEdge(const std::string &from, const std::string &to, unsigned long long weight) {
+  void Graph::addEdge(const std::string &from, const std::string &to, unsigned long long weight)
+  {
     addVertex(from);
     addVertex(to);
 
@@ -36,7 +40,8 @@ namespace nepochatova {
     }
   }
 
-  bool Graph::removeEdge(const std::string &from, const std::string &to, unsigned long long weight) {
+  bool Graph::removeEdge(const std::string &from, const std::string &to, unsigned long long weight)
+  {
     EdgeKey key{from, to};
     if (!edges_.has(key)) return false;
 
@@ -53,7 +58,8 @@ namespace nepochatova {
     return false;
   }
 
-  static void sortPairsByFirst(Vector<std::pair<std::string, Vector<unsigned long long> > > &vec) {
+  static void sortPairsByFirst(Vector<std::pair<std::string, Vector<unsigned long long> > > &vec)
+  {
     for (size_t i = 0; i < vec.getSize(); ++i) {
       for (size_t j = i + 1; j < vec.getSize(); ++j) {
         if (vec[j].first < vec[i].first) {
@@ -66,7 +72,8 @@ namespace nepochatova {
   }
 
   Vector<std::pair<std::string, Vector<unsigned long long> > >
-  Graph::getOutbound(const std::string &vertex) const {
+  Graph::getOutbound(const std::string &vertex) const
+  {
     Vector<std::pair<std::string, Vector<unsigned long long> > > result;
 
     for (auto it = edges_.begin(); it != edges_.end(); ++it) {
@@ -83,7 +90,8 @@ namespace nepochatova {
   }
 
   Vector<std::pair<std::string, Vector<unsigned long long> > >
-  Graph::getInbound(const std::string &vertex) const {
+  Graph::getInbound(const std::string &vertex) const
+  {
     Vector<std::pair<std::string, Vector<unsigned long long> > > result;
 
     for (auto it = edges_.begin(); it != edges_.end(); ++it) {
@@ -100,7 +108,8 @@ namespace nepochatova {
     return result;
   }
 
-  Graph Graph::merge(const Graph &other) const {
+  Graph Graph::merge(const Graph &other) const
+  {
     Graph result;
 
     auto copyEdges = [&](const auto &table, Graph &target) {
@@ -121,7 +130,8 @@ namespace nepochatova {
     return result;
   }
 
-  Graph Graph::extract(const Vector<std::string> &vertices) const {
+  Graph Graph::extract(const Vector<std::string> &vertices) const
+  {
     Graph result;
 
     for (size_t i = 0; i < vertices.getSize(); ++i) {

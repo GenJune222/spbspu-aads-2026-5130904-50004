@@ -2,11 +2,13 @@
 #include <utility>
 
 namespace nepochatova {
-  void printInvalid(std::ostream &out) {
+  void printInvalid(std::ostream &out)
+  {
     out << "<INVALID COMMAND>\n";
   }
 
-  void cmdGraphs(std::istream &, std::ostream &out, GraphSet &graphs) {
+  void cmdGraphs(std::istream &, std::ostream &out, GraphSet &graphs)
+  {
     Vector<std::string> names;
     for (auto it = graphs.begin(); it != graphs.end(); ++it)
       names.pushBack(it->first);
@@ -19,7 +21,8 @@ namespace nepochatova {
       out << names[i] << '\n';
   }
 
-  void cmdVertexes(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdVertexes(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string name;
     if (!(in >> name) || !graphs.has(name)) {
       printInvalid(out);
@@ -31,7 +34,8 @@ namespace nepochatova {
       out << verts[i] << '\n';
   }
 
-  void cmdOutbound(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdOutbound(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string gname, v;
     if (!(in >> gname >> v) || !graphs.has(gname)) {
       printInvalid(out);
@@ -53,7 +57,8 @@ namespace nepochatova {
     }
   }
 
-  void cmdInbound(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdInbound(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string gname, v;
     if (!(in >> gname >> v) || !graphs.has(gname)) {
       printInvalid(out);
@@ -75,7 +80,8 @@ namespace nepochatova {
     }
   }
 
-  void cmdBind(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdBind(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string gname, a, b;
     unsigned long long w;
     if (!(in >> gname >> a >> b >> w) || !graphs.has(gname)) {
@@ -85,7 +91,8 @@ namespace nepochatova {
     graphs.get(gname).addEdge(a, b, w);
   }
 
-  void cmdCut(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdCut(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string gname, a, b;
     unsigned long long w;
     if (!(in >> gname >> a >> b >> w) || !graphs.has(gname)) {
@@ -95,7 +102,8 @@ namespace nepochatova {
     if (!graphs.get(gname).removeEdge(a, b, w)) printInvalid(out);
   }
 
-  void cmdCreate(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdCreate(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string name;
     if (!(in >> name) || graphs.has(name)) {
       printInvalid(out);
@@ -120,7 +128,8 @@ namespace nepochatova {
     graphs.add(name, g);
   }
 
-  void cmdMerge(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdMerge(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string newname, old1, old2;
     if (!(in >> newname >> old1 >> old2) || graphs.has(newname)) {
       printInvalid(out);
@@ -133,7 +142,8 @@ namespace nepochatova {
     graphs.add(newname, graphs.get(old1).merge(graphs.get(old2)));
   }
 
-  void cmdExtract(std::istream &in, std::ostream &out, GraphSet &graphs) {
+  void cmdExtract(std::istream &in, std::ostream &out, GraphSet &graphs)
+  {
     std::string newname, oldname;
     if (!(in >> newname >> oldname) || graphs.has(newname)) {
       printInvalid(out);

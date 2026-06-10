@@ -11,13 +11,15 @@ namespace nepochatova {
     std::string from;
     std::string to;
 
-    bool operator==(const EdgeKey &other) const noexcept {
+    bool operator==(const EdgeKey &other) const noexcept
+    {
       return from == other.from && to == other.to;
     }
   };
 
   struct EdgeKeyHash {
-    size_t operator()(const EdgeKey &k) const noexcept {
+    size_t operator()(const EdgeKey &k) const noexcept
+    {
       size_t h1 = 14695981039346656037ULL;
       for (char c: k.from) {
         h1 ^= static_cast<size_t>(c);
@@ -33,12 +35,14 @@ namespace nepochatova {
   };
 
   struct EdgeKeyEqual {
-    bool operator()(const EdgeKey &a, const EdgeKey &b) const noexcept {
+    bool operator()(const EdgeKey &a, const EdgeKey &b) const noexcept
+    {
       return a == b;
     }
   };
 
-  class Graph {
+  class Graph
+  {
   public:
     Graph() = default;
 

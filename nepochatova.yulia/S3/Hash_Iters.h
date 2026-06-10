@@ -10,7 +10,8 @@ namespace nepochatova {
   class HashTable;
 
   template<class Key, class Value, class Hash, class Equal>
-  class HashIter {
+  class HashIter
+  {
     friend class HashTable<Key, Value, Hash, Equal>;
 
   public:
@@ -65,21 +66,21 @@ namespace nepochatova {
 }
 
 template<class Key, class Value, class Hash, class Equal>
-nepochatova::HashIter<Key, Value, Hash, Equal>::HashIter()
-  : table_(nullptr),
-    bucket_index_(0),
-    chain_it_() {
-}
+nepochatova::HashIter<Key, Value, Hash, Equal>::HashIter():
+  table_(nullptr),
+  bucket_index_(0),
+  chain_it_()
+{}
 
 template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashIter<Key, Value, Hash, Equal>::HashIter(
   HashTable<Key, Value, Hash, Equal> *table,
   size_t bucket_index,
-  typename Vector<std::pair<Key, Value> >::Iterator it
-)
-  : table_(table),
+  typename Vector<std::pair<Key, Value> >::Iterator it):
+    table_(table),
     bucket_index_(bucket_index),
-    chain_it_(it) {
+    chain_it_(it)
+{
   if (!table_) return;
 
   while (bucket_index_ < table_->data_.getSize() &&
@@ -93,7 +94,8 @@ nepochatova::HashIter<Key, Value, Hash, Equal>::HashIter(
 
 template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashIter<Key, Value, Hash, Equal> &
-nepochatova::HashIter<Key, Value, Hash, Equal>::operator++() {
+nepochatova::HashIter<Key, Value, Hash, Equal>::operator++()
+{
   if (!table_ || bucket_index_ >= table_->data_.getSize()) {
     return *this;
   }
@@ -112,8 +114,8 @@ nepochatova::HashIter<Key, Value, Hash, Equal>::operator++() {
 
 template<class Key, class Value, class Hash, class Equal>
 bool nepochatova::HashIter<Key, Value, Hash, Equal>::operator!=(
-  const HashIter &other
-) const {
+  const HashIter &other) const
+{
   return table_ != other.table_ ||
          bucket_index_ != other.bucket_index_ ||
          chain_it_ != other.chain_it_;
@@ -121,32 +123,34 @@ bool nepochatova::HashIter<Key, Value, Hash, Equal>::operator!=(
 
 template<class Key, class Value, class Hash, class Equal>
 std::pair<Key, Value> &
-nepochatova::HashIter<Key, Value, Hash, Equal>::operator*() {
+nepochatova::HashIter<Key, Value, Hash, Equal>::operator*()
+{
   return *chain_it_;
 }
 
 template<class Key, class Value, class Hash, class Equal>
 std::pair<Key, Value> *
-nepochatova::HashIter<Key, Value, Hash, Equal>::operator->() {
+nepochatova::HashIter<Key, Value, Hash, Equal>::operator->()
+{
   return &(*chain_it_);
 }
 
 template<class Key, class Value, class Hash, class Equal>
-nepochatova::HashConstIter<Key, Value, Hash, Equal>::HashConstIter()
-  : table_(nullptr),
-    bucket_index_(0),
-    chain_it_() {
+nepochatova::HashConstIter<Key, Value, Hash, Equal>::HashConstIter():
+  table_(nullptr),
+  bucket_index_(0),
+  chain_it_() {
 }
 
 template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashConstIter<Key, Value, Hash, Equal>::HashConstIter(
   const HashTable<Key, Value, Hash, Equal> *table,
   size_t bucket_index,
-  typename Vector<std::pair<Key, Value> >::CIterator it
-)
-  : table_(table),
+  typename Vector<std::pair<Key, Value> >::CIterator it):
+    table_(table),
     bucket_index_(bucket_index),
-    chain_it_(it) {
+    chain_it_(it)
+{
   if (!table_) return;
 
   while (bucket_index_ < table_->data_.getSize() &&
@@ -160,7 +164,8 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::HashConstIter(
 
 template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashConstIter<Key, Value, Hash, Equal> &
-nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++() {
+nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++()
+{
   if (!table_ || bucket_index_ >= table_->data_.getSize()) {
     return *this;
   }
@@ -179,8 +184,8 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++() {
 
 template<class Key, class Value, class Hash, class Equal>
 bool nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator!=(
-  const HashConstIter &other
-) const {
+  const HashConstIter &other) const
+{
   return table_ != other.table_ ||
          bucket_index_ != other.bucket_index_ ||
          chain_it_ != other.chain_it_;
@@ -188,13 +193,15 @@ bool nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator!=(
 
 template<class Key, class Value, class Hash, class Equal>
 const std::pair<Key, Value> &
-nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator*() const {
+nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator*() const
+{
   return *chain_it_;
 }
 
  template<class Key, class Value, class Hash, class Equal>
 const std::pair<Key, Value> *
-nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator->() const {
+nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator->() const
+{
   return &(*chain_it_);
 }
 

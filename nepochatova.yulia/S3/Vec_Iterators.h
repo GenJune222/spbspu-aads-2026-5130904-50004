@@ -4,10 +4,12 @@
 
 namespace nepochatova {
 
-  template <class T> class Vector;
+  template <class T>
+  class Vector;
 
   template <class T>
-  class Iterator {
+  class Iterator
+  {
   public:
     Iterator();
     Iterator(Vector<T>& vec, size_t idx);
@@ -35,7 +37,8 @@ namespace nepochatova {
 
 
   template <class T>
-  class CIterator {
+  class CIterator
+  {
   public:
     CIterator();
     CIterator(const Vector<T>& vec, size_t idx);
@@ -63,138 +66,172 @@ namespace nepochatova {
 }
 
 template<class T>
-nepochatova::Iterator<T>::Iterator() : vector(nullptr), id(0){}
+nepochatova::Iterator<T>::Iterator() :
+  vector(nullptr),
+  id(0)
+{}
 
 template<class T>
-nepochatova::Iterator<T>::Iterator(nepochatova::Vector<T> &vec, size_t idx) : vector(&vec), id(idx) {}
+nepochatova::Iterator<T>::Iterator(nepochatova::Vector<T> &vec, size_t idx) :
+  vector(&vec),
+  id(idx)
+{}
 
 template<class T>
-nepochatova::Iterator<T> &nepochatova::Iterator<T>::operator+=(size_t n) {
+nepochatova::Iterator<T> &nepochatova::Iterator<T>::operator+=(size_t n)
+{
   id += n;
   return *this;
 }
 
 template<class T>
-nepochatova::Iterator<T> &nepochatova::Iterator<T>::operator-=(size_t n) {
+nepochatova::Iterator<T> &nepochatova::Iterator<T>::operator-=(size_t n)
+{
   id -= n;
   return *this;
 }
 
 template<class T>
-T &nepochatova::Iterator<T>::operator*() const {
+T &nepochatova::Iterator<T>::operator*() const
+{
   return (*vector)[id];
 }
 
 template<class T>
-bool nepochatova::Iterator<T>::operator==(const Iterator<T> &other) const {
+bool nepochatova::Iterator<T>::operator==(const Iterator<T> &other) const
+{
   return id == other.id;
 }
 
 template<class T>
-bool nepochatova::Iterator<T>::operator!=(const Iterator<T> &other) const {
+bool nepochatova::Iterator<T>::operator!=(const Iterator<T> &other) const
+{
   return id != other.id;
 }
 
 template<class T>
-nepochatova::Iterator<T>& nepochatova::Iterator<T>::operator=(const Iterator& other) {
+nepochatova::Iterator<T>& nepochatova::Iterator<T>::operator=(const Iterator& other)
+{
   vector = other.vector;
   id = other.id;
   return *this;
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Iterator<T>::operator+(size_t n) const {
+nepochatova::Iterator<T> nepochatova::Iterator<T>::operator+(size_t n) const
+{
   return nepochatova::Iterator<T>(vector, id + n);
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Iterator<T>::operator-(size_t n) const {
+nepochatova::Iterator<T> nepochatova::Iterator<T>::operator-(size_t n) const
+{
   return nepochatova::Iterator<T>(vector, id - n);
 }
 
 template<class T>
-nepochatova::Iterator<T>& nepochatova::Iterator<T>::operator++() {
+nepochatova::Iterator<T>& nepochatova::Iterator<T>::operator++()
+{
   ++id;
   return *this;
 }
 
 template<class T>
-nepochatova::Iterator<T> nepochatova::Iterator<T>::operator++(int) {
+nepochatova::Iterator<T> nepochatova::Iterator<T>::operator++(int)
+{
   Iterator tmp = *this;
   ++(*this);
   return tmp;
 }
 
 template<class T>
-T* nepochatova::Iterator<T>::operator->() const {
+T* nepochatova::Iterator<T>::operator->() const
+{
   return &(*vector)[id];
 }
 
 template<class T>
-nepochatova::CIterator<T>::CIterator() : vector(nullptr), id(0){}
+nepochatova::CIterator<T>::CIterator() :
+  vector(nullptr),
+  id(0)
+{}
 
 template<class T>
-nepochatova::CIterator<T>::CIterator(const nepochatova::Vector<T> &vec, size_t idx) : vector(&vec), id(idx) {}
+nepochatova::CIterator<T>::CIterator(const nepochatova::Vector<T> &vec, size_t idx) :
+  vector(&vec),
+  id(idx)
+{}
 
 template<class T>
-nepochatova::CIterator<T> &nepochatova::CIterator<T>::operator+=(size_t n) {
+nepochatova::CIterator<T> &nepochatova::CIterator<T>::operator+=(size_t n)
+{
   id += n;
   return *this;
 }
 
 template<class T>
-nepochatova::CIterator<T> &nepochatova::CIterator<T>::operator-=(size_t n) {
+nepochatova::CIterator<T> &nepochatova::CIterator<T>::operator-=(size_t n)
+{
   id -= n;
   return *this;
 }
 
 template<class T>
-const T &nepochatova::CIterator<T>::operator*() const {
+const T &nepochatova::CIterator<T>::operator*() const
+{
   return (*vector)[id];
 }
 
 template<class T>
-nepochatova::CIterator<T>& nepochatova::CIterator<T>::operator++() {
+nepochatova::CIterator<T>& nepochatova::CIterator<T>::operator++()
+{
   ++id;
   return *this;
 }
 
 template<class T>
-nepochatova::CIterator<T> nepochatova::CIterator<T>::operator++(int) {
+nepochatova::CIterator<T> nepochatova::CIterator<T>::operator++(int)
+{
   CIterator tmp = *this;
   ++(*this);
   return tmp;
 }
 
 template<class T>
-bool nepochatova::CIterator<T>::operator==(const CIterator<T> &other) const {
+bool nepochatova::CIterator<T>::operator==(const CIterator<T> &other) const
+{
   return id == other.id;
 }
 
 template<class T>
-bool nepochatova::CIterator<T>::operator!=(const CIterator<T> &other) const {
+bool nepochatova::CIterator<T>::operator!=(const CIterator<T> &other) const
+{
   return id != other.id;
 }
 
 template<class T>
-nepochatova::CIterator<T>& nepochatova::CIterator<T>::operator=(const CIterator& other) {
+nepochatova::CIterator<T>& nepochatova::CIterator<T>::operator=(const CIterator& other)
+{
   vector = other.vector;
   id = other.id;
   return *this;
 }
 
 template<class T>
-nepochatova::CIterator<T> nepochatova::CIterator<T>::operator+(size_t n) const {
+nepochatova::CIterator<T> nepochatova::CIterator<T>::operator+(size_t n) const
+{
   return nepochatova::CIterator<T>(vector, id + n);
 }
 
 template<class T>
-nepochatova::CIterator<T> nepochatova::CIterator<T>::operator-(size_t n) const {
+nepochatova::CIterator<T> nepochatova::CIterator<T>::operator-(size_t n) const
+{
   return nepochatova::CIterator<T>(vector, id - n);
 }
 
 template<class T>
-const T* nepochatova::CIterator<T>::operator->() const {
+const T* nepochatova::CIterator<T>::operator->() const
+{
   return &(*vector)[id];
 }
 

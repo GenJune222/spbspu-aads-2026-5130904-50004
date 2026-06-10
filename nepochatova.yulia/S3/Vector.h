@@ -8,7 +8,8 @@
 
 namespace nepochatova {
   template <class T>
-  class Vector {
+  class Vector
+  {
    public:
 
     using Iterator = nepochatova::Iterator<T>;
@@ -73,39 +74,50 @@ namespace nepochatova {
 
 
 template<class T>
-nepochatova::Vector<T>::Vector() : data_(nullptr), size_(0), capacity_(0) {
-}
+nepochatova::Vector<T>::Vector() :
+  data_(nullptr),
+  size_(0),
+  capacity_(0)
+{}
 
 template<class T>
-nepochatova::Vector<T>::~Vector() {
+nepochatova::Vector<T>::~Vector()
+{
   delete[] data_;
 }
 
 template<class T>
-nepochatova::Vector<T>::Vector(size_t size) : data_(size ? new T[size] : nullptr), size_(size), capacity_(size) {
-}
+nepochatova::Vector<T>::Vector(size_t size) :
+  data_(size ? new T[size] : nullptr),
+  size_(size),
+  capacity_(size)
+{}
 
 template<class T>
-nepochatova::Vector<T>::Vector(size_t size, const T &value) : Vector(size) {
+nepochatova::Vector<T>::Vector(size_t size, const T &value) : Vector(size)
+{
   for (size_t i = 0; i < size; ++i) {
     data_[i] = value;
   }
 }
 
 template<class T>
-nepochatova::Vector<T>::Vector(const Vector<T> &rhs) : Vector(rhs.getSize()) {
+nepochatova::Vector<T>::Vector(const Vector<T> &rhs) : Vector(rhs.getSize())
+{
   for (size_t i = 0; i < rhs.getSize(); ++i) {
     data_[i] = rhs.data_[i];
   }
 }
 
 template<class T>
-nepochatova::Vector<T>::Vector(Vector<T> &&rhs) noexcept : Vector() {
+nepochatova::Vector<T>::Vector(Vector<T> &&rhs) noexcept : Vector()
+{
   swap(rhs);
 }
 
 template<class T>
-nepochatova::Vector<T> &nepochatova::Vector<T>::operator=(const Vector<T> &rhs) {
+nepochatova::Vector<T> &nepochatova::Vector<T>::operator=(const Vector<T> &rhs)
+{
   if (this == std::addressof(rhs)) {
     return *this;
   }
@@ -115,24 +127,28 @@ nepochatova::Vector<T> &nepochatova::Vector<T>::operator=(const Vector<T> &rhs) 
 }
 
 template<class T>
-nepochatova::Vector<T> &nepochatova::Vector<T>::operator=(Vector<T> &&rhs) noexcept {
+nepochatova::Vector<T> &nepochatova::Vector<T>::operator=(Vector<T> &&rhs) noexcept
+{
   Vector<T> cpy(std::move(rhs));
   swap(cpy);
   return *this;
 }
 
 template<class T>
-T &nepochatova::Vector<T>::operator[](size_t id) noexcept {
+T &nepochatova::Vector<T>::operator[](size_t id) noexcept
+{
   return const_cast<T &>((*static_cast<const Vector<T> *>(this))[id]);
 }
 
 template<class T>
-const T &nepochatova::Vector<T>::operator[](size_t id) const noexcept {
+const T &nepochatova::Vector<T>::operator[](size_t id) const noexcept
+{
   return data_[id];
 }
 
 template<class T>
-T &nepochatova::Vector<T>::at(size_t id) {
+T &nepochatova::Vector<T>::at(size_t id)
+{
   if (id >= getSize()) {
     throw std::out_of_range("Index out of range");
   }
@@ -140,7 +156,8 @@ T &nepochatova::Vector<T>::at(size_t id) {
 }
 
 template<class T>
-const T &nepochatova::Vector<T>::at(size_t id) const {
+const T &nepochatova::Vector<T>::at(size_t id) const
+{
   if (id >= getSize()) {
     throw std::out_of_range("Index out of range");
   }
@@ -149,17 +166,27 @@ const T &nepochatova::Vector<T>::at(size_t id) const {
 
 
 template<class T>
-bool nepochatova::Vector<T>::isEmpty() const noexcept { return !size_; }
+bool nepochatova::Vector<T>::isEmpty() const noexcept
+{
+  return !size_;
+}
 
 template<class T>
-size_t nepochatova::Vector<T>::getSize() const noexcept { return size_; }
+size_t nepochatova::Vector<T>::getSize() const noexcept
+{
+  return size_;
+}
 
 template<class T>
-size_t nepochatova::Vector<T>::getCapacity() const noexcept { return capacity_; }
+size_t nepochatova::Vector<T>::getCapacity() const noexcept
+{
+  return capacity_;
+}
 
 
 template<class T>
-void nepochatova::Vector<T>::pushBack(const T &rhs) {
+void nepochatova::Vector<T>::pushBack(const T &rhs)
+{
   if (size_ >= capacity_) {
     size_t newCapacity = (capacity_ == 0) ? 1 : capacity_ * 2;
     T *newData = new T[newCapacity];
@@ -179,14 +206,16 @@ void nepochatova::Vector<T>::pushBack(const T &rhs) {
 }
 
 template<class T>
-void nepochatova::Vector<T>::popBack() {
+void nepochatova::Vector<T>::popBack()
+{
   if (size_) {
     --size_;
   }
 }
 
 template<class T>
-void nepochatova::Vector<T>::pushFront(const T &t) {
+void nepochatova::Vector<T>::pushFront(const T &t)
+{
   Vector<T> v(getSize() + 1);
   v[0] = t;
   for (size_t i = 1; i < v.getSize(); ++i) {
@@ -196,7 +225,8 @@ void nepochatova::Vector<T>::pushFront(const T &t) {
 }
 
 template<class T>
-void nepochatova::Vector<T>::swap(Vector<T> &rhs) noexcept {
+void nepochatova::Vector<T>::swap(Vector<T> &rhs) noexcept
+{
   std::swap(data_, rhs.data_);
   std::swap(size_, rhs.size_);
   std::swap(capacity_, rhs.capacity_);
@@ -204,7 +234,8 @@ void nepochatova::Vector<T>::swap(Vector<T> &rhs) noexcept {
 
 
 template<class T>
-void nepochatova::Vector<T>::insert(size_t id, const T &t) {
+void nepochatova::Vector<T>::insert(size_t id, const T &t)
+{
   if (id > size_) {
     throw std::out_of_range("Index out of range");
   }
@@ -220,7 +251,8 @@ void nepochatova::Vector<T>::insert(size_t id, const T &t) {
 }
 
 template<class T>
-void nepochatova::Vector<T>::insert(size_t id, const Vector<T> &rhs, size_t beg, size_t end) {
+void nepochatova::Vector<T>::insert(size_t id, const Vector<T> &rhs, size_t beg, size_t end)
+{
   if (id > size_ || beg > end || end > rhs.getSize()) {
     throw std::out_of_range("Invalid range");
   }
@@ -238,7 +270,8 @@ void nepochatova::Vector<T>::insert(size_t id, const Vector<T> &rhs, size_t beg,
 }
 
 template<class T>
-void nepochatova::Vector<T>::erase(size_t id) {
+void nepochatova::Vector<T>::erase(size_t id)
+{
   if (id >= size_) {
     throw std::out_of_range("Index out of range");
   }
@@ -253,7 +286,8 @@ void nepochatova::Vector<T>::erase(size_t id) {
 }
 
 template<class T>
-void nepochatova::Vector<T>::erase(size_t beg, size_t end) {
+void nepochatova::Vector<T>::erase(size_t beg, size_t end)
+{
   if (beg > end || end > size_) {
     throw std::out_of_range("Invalid range");
   }
@@ -269,43 +303,50 @@ void nepochatova::Vector<T>::erase(size_t beg, size_t end) {
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::begin() {
+nepochatova::Vector<T>::begin()
+{
   return Iterator(*this, 0);
 }
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::end() {
+nepochatova::Vector<T>::end()
+{
   return Iterator(*this, size_);
 }
 
 template<class T>
 typename nepochatova::Vector<T>::CIterator
-nepochatova::Vector<T>::begin() const {
+nepochatova::Vector<T>::begin() const
+{
   return CIterator(*this, 0);
 }
 
 template<class T>
 typename nepochatova::Vector<T>::CIterator
-nepochatova::Vector<T>::end() const {
+nepochatova::Vector<T>::end() const
+{
   return CIterator(*this, size_);
 }
 
 template<class T>
 typename nepochatova::Vector<T>::CIterator
-nepochatova::Vector<T>::cbegin() const {
+nepochatova::Vector<T>::cbegin() const
+{
   return CIterator(*this, 0);
 }
 
 template<class T>
 typename nepochatova::Vector<T>::CIterator
-nepochatova::Vector<T>::cend() const {
+nepochatova::Vector<T>::cend() const
+{
   return CIterator(*this, size_);
 }
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::insert(Iterator pos, const T &value) {
+nepochatova::Vector<T>::insert(Iterator pos, const T &value)
+{
   size_t index = pos.id;
   insert(index, value);
   return Iterator(*this, index);
@@ -313,7 +354,8 @@ nepochatova::Vector<T>::insert(Iterator pos, const T &value) {
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::insert(Iterator pos, CIterator beg, CIterator end) {
+nepochatova::Vector<T>::insert(Iterator pos, CIterator beg, CIterator end)
+{
   if (beg.id == end.id) {
     return pos;
   }
@@ -339,7 +381,8 @@ nepochatova::Vector<T>::insert(Iterator pos, CIterator beg, CIterator end) {
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::insert(Iterator pos, size_t count, const T &value) {
+nepochatova::Vector<T>::insert(Iterator pos, size_t count, const T &value)
+{
   if (count == 0) {
     return pos;
   }
@@ -365,7 +408,8 @@ nepochatova::Vector<T>::insert(Iterator pos, size_t count, const T &value) {
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::erase(Iterator pos) {
+nepochatova::Vector<T>::erase(Iterator pos)
+{
   size_t index = pos.id;
   erase(index);
   return Iterator(*this, index);
@@ -373,7 +417,8 @@ nepochatova::Vector<T>::erase(Iterator pos) {
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::erase(Iterator beg, Iterator end) {
+nepochatova::Vector<T>::erase(Iterator beg, Iterator end)
+{
   if (beg.id == end.id) {
     return beg;
   }
@@ -387,7 +432,8 @@ nepochatova::Vector<T>::erase(Iterator beg, Iterator end) {
 
 template<class T>
 typename nepochatova::Vector<T>::Iterator
-nepochatova::Vector<T>::erase(CIterator beg, CIterator end) {
+nepochatova::Vector<T>::erase(CIterator beg, CIterator end)
+{
   if (beg.id == end.id) {
     return Iterator(*this, beg.id);
   }
@@ -409,7 +455,8 @@ void nepochatova::Vector<T>::sort() {
 }
 
 template<class T>
-size_t nepochatova::Vector<T>::partition(size_t low, size_t high) {
+size_t nepochatova::Vector<T>::partition(size_t low, size_t high)
+{
   T pivot = data_[high];
   size_t i = low;
   for (size_t j = low; j < high; ++j) {
@@ -427,7 +474,8 @@ size_t nepochatova::Vector<T>::partition(size_t low, size_t high) {
 }
 
 template<class T>
-void nepochatova::Vector<T>::quickSort(size_t low, size_t high) {
+void nepochatova::Vector<T>::quickSort(size_t low, size_t high)
+{
   if (low < high) {
     size_t pi = partition(low, high);
     if (pi > 0) {
@@ -438,7 +486,8 @@ void nepochatova::Vector<T>::quickSort(size_t low, size_t high) {
 }
 
 template<class T>
-void nepochatova::Vector<T>::clear() {
+void nepochatova::Vector<T>::clear()
+{
   size_ = 0;
 }
 
