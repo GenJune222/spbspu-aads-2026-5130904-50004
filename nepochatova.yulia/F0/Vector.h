@@ -134,7 +134,7 @@ nepochatova::Vector<T> &nepochatova::Vector<T>::operator=(Vector<T> &&rhs) noexc
 template<class T>
 T &nepochatova::Vector<T>::operator[](size_t id) noexcept
 {
-  return const_cast<T &>((*static_cast<const Vector<T> *>(this))[id]);
+  return data_[id];
 }
 
 template<class T>

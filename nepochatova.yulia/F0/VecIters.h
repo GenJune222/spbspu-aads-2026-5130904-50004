@@ -2,6 +2,7 @@
 #define VECITERS_H
 
 #include <cstddef>
+#include <stdexcept>
 
 namespace nepochatova {
 
@@ -9,7 +10,10 @@ namespace nepochatova {
   class Vector;
 
   template <class T>
-  class Iterator {
+  class Iterator
+  {
+    friend class Vector<T>;
+
   public:
     Iterator();
     Iterator(Vector<T>& vec, size_t idx);
@@ -31,13 +35,16 @@ namespace nepochatova {
 
     T* operator->() const;
 
+  private:
     Vector<T>* vector;
     size_t id;
   };
 
 
   template <class T>
-  class CIterator {
+  class CIterator
+  {
+    friend class Vector<T>;
   public:
     CIterator();
     CIterator(const Vector<T>& vec, size_t idx);
@@ -59,6 +66,7 @@ namespace nepochatova {
 
     const T* operator->() const;
 
+  private:
     const Vector<T>* vector;
     size_t id;
   };
@@ -78,13 +86,18 @@ nepochatova::Iterator<T> &nepochatova::Iterator<T>::operator+=(size_t n) {
 
 template<class T>
 nepochatova::Iterator<T> &nepochatova::Iterator<T>::operator-=(size_t n) {
+  if (n > id) {
+    throw std::out_of_range("iterator underflow");
+  }
   id -= n;
   return *this;
 }
 
 template<class T>
 T &nepochatova::Iterator<T>::operator*() const {
-  if (!vector) throw;
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
   return (*vector)[id];
 }
 
@@ -108,11 +121,17 @@ nepochatova::Iterator<T>& nepochatova::Iterator<T>::operator=(const Iterator& ot
 
 template<class T>
 nepochatova::Iterator<T> nepochatova::Iterator<T>::operator+(size_t n) const {
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
   return nepochatova::Iterator<T>(*vector, id + n);
 }
 
 template<class T>
 nepochatova::Iterator<T> nepochatova::Iterator<T>::operator-(size_t n) const {
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
   return nepochatova::Iterator<T>(*vector, id - n);
 }
 
@@ -131,6 +150,9 @@ nepochatova::Iterator<T> nepochatova::Iterator<T>::operator++(int) {
 
 template<class T>
 T* nepochatova::Iterator<T>::operator->() const {
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
   return &(*vector)[id];
 }
 
@@ -148,13 +170,18 @@ nepochatova::CIterator<T> &nepochatova::CIterator<T>::operator+=(size_t n) {
 
 template<class T>
 nepochatova::CIterator<T> &nepochatova::CIterator<T>::operator-=(size_t n) {
+  if (n > id) {
+    throw std::out_of_range("iterator underflow");
+  }
   id -= n;
   return *this;
 }
 
 template<class T>
 const T &nepochatova::CIterator<T>::operator*() const {
-  if (!vector) throw;
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
   return (*vector)[id];
 }
 
@@ -191,16 +218,25 @@ nepochatova::CIterator<T>& nepochatova::CIterator<T>::operator=(const CIterator&
 
 template<class T>
 nepochatova::CIterator<T> nepochatova::CIterator<T>::operator+(size_t n) const {
-  return nepochatova::CIterator<T>(vector, id + n);
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
+  return nepochatova::CIterator<T>(*vector, id + n);
 }
 
 template<class T>
 nepochatova::CIterator<T> nepochatova::CIterator<T>::operator-(size_t n) const {
-  return nepochatova::CIterator<T>(vector, id - n);
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
+  return nepochatova::CIterator<T>(*vector, id - n);
 }
 
 template<class T>
 const T* nepochatova::CIterator<T>::operator->() const {
+  if (!vector) {
+    throw std::logic_error("null iterator");
+  }
   return &(*vector)[id];
 }
 
