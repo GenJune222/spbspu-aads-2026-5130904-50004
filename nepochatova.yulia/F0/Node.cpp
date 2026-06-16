@@ -1,0 +1,190 @@
+#include "Node.h"
+
+namespace nepochatova {
+
+  Node::Node(const std::string &tag) :
+    tag_(tag),
+    parent_(nullptr)
+  {}
+
+  Node::~Node()
+  {
+    for (auto child: children_) {
+      delete child;
+    }
+  }
+
+  Node *Node::addChild(const std::string &tag)
+  {
+    Node *child = new Node(tag);
+    child->parent_ = this;
+    children_.pushBack(child);
+
+    return child;
+  }
+
+  void Node::removeChild(Node *node)
+  {
+    for (size_t i = 0; i < children_.getSize(); ++i) {
+      if (children_[i] == node) {
+        delete children_[i];
+        children_.erase(i);
+
+        return;
+      }
+    }
+  }
+
+  void Node::moveTo(Node *newParent) {
+    if (newParent == nullptr) {
+      throw std::invalid_argument("null parent");
+    }
+
+    if (newParent == this) {
+      throw std::invalid_argument("cycle");
+    }
+
+    if (containsInSubtree(newParent)) {
+      throw std::invalid_argument("cycle");
+    }
+
+    if (parent_) {
+      for (size_t i = 0; i < parent_->children_.getSize(); ++i) {
+        if (parent_->children_[i] == this) {
+          parent_->children_.erase(i);
+          break;
+        }
+      }
+    }
+    parent_ = newParent;
+    newParent->children_.pushBack(this);
+  }
+
+  void Node::setAttribute(const std::string &key, const std::string &value)
+  {
+    attributes_.insert(key, value);
+  }
+
+  void Node::removeAttribute(const std::string &key)
+  {
+    if (attributes_.contains(key)) {
+      attributes_.erase(key);
+    }
+  }
+
+  bool Node::hasAttribute(const std::string &key) const
+  {
+    return attributes_.contains(key);
+  }
+
+  std::string Node::getAttribute(const std::string &key) const
+  {
+    return attributes_.find(key);
+  }
+
+  const std::string &Node::getTag() const
+  {
+    return tag_;
+  }
+
+  Node *Node::getParent()
+  {
+    return parent_;
+  }
+
+  const Node *Node::getParent() const
+  {
+    return parent_;
+  }
+
+  Vector<Node *> &Node::getChildren()
+  {
+    return children_;
+  }
+
+  const Vector<Node *> &Node::getChildren() const
+  {
+    return children_;
+  }
+
+  void Node::printTree(size_t depth) const
+  {
+    for (size_t i = 0; i < depth; ++i) {
+      std::cout << "    ";
+    }
+    std::cout << tag_ << "\n";
+
+    for (auto child: children_) {
+      child->printTree(depth + 1);
+    }
+  }
+
+  size_t Node::size() const
+  {
+    size_t result = 1;
+
+    for (auto child: children_) {
+      result += child->size();
+    }
+    return result;
+  }
+
+  size_t Node::depth() const
+  {
+    size_t maxDepth = 0;
+
+    for (auto child: children_) {
+      size_t d = child->depth();
+
+      if (d > maxDepth)
+        maxDepth = d;
+    }
+    return maxDepth + 1;
+  }
+
+  void Node::findByTag(const std::string &tag, Vector<Node *> &result)
+  {
+    if (tag_ == tag) {
+      result.pushBack(this);
+    }
+
+    for (auto child: children_) {
+      child->findByTag(tag, result);
+    }
+  }
+
+  void Node::findById(const std::string &id, Vector<Node *> &result)
+  {
+    if (hasAttribute("id") && getAttribute("id") == id) {
+      result.pushBack(this);
+    }
+
+    for (auto child: children_) {
+      child->findById(id, result);
+    }
+  }
+
+  void Node::findByClass(const std::string &cls, Vector<Node *> &result)
+  {
+    if (hasAttribute("class") && getAttribute("class") == cls) {
+      result.pushBack(this);
+    }
+
+    for (auto child: children_) {
+      child->findByClass(cls, result);
+    }
+  }
+
+  bool Node::containsInSubtree(Node *node) const
+  {
+    if (this == node)
+      return true;
+
+    for (auto child: children_) {
+      if (child->containsInSubtree(node))
+        return true;
+    }
+
+    return false;
+  }
+}
