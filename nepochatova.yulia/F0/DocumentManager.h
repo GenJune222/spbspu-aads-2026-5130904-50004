@@ -21,6 +21,7 @@ namespace nepochatova {
 
     DocumentTree* getTree(const std::string &name);
     const DocumentTree* getTree(const std::string &name) const;
+    Vector<std::string> getTreeNames() const;
 
     size_t size() const;
 

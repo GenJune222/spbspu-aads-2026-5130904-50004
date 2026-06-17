@@ -54,6 +54,18 @@ namespace nepochatova {
     return trees_.find(name);
   }
 
+  Vector<std::string> DocumentManager::getTreeNames() const
+  {
+    Vector<std::string> result;
+
+    for (auto it = trees_.begin(); it != trees_.end(); ++it)
+    {
+      result.pushBack(it->first);
+    }
+
+    return result;
+  }
+
   size_t DocumentManager::size() const
   {
     return trees_.size();

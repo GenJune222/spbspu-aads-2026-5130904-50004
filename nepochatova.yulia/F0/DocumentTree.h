@@ -12,13 +12,18 @@ namespace nepochatova {
     DocumentTree(const DocumentTree &) = delete;
     DocumentTree &operator=(const DocumentTree &) = delete;
 
-    Node *getRoot();
+    Node* getRoot();
     const Node *getRoot() const;
 
-    Node *addNode(Node *parent, const std::string &tag);
+    Node* addNode(Node *parent, const std::string &tag);
     void deleteNode(Node *node);
 
     void moveNode(Node *node, Node *newParent);
+
+    void printTree() const;
+    void printSubtree(const std::string& nodeId) const;
+
+    void find(const std::string& type,const std::string& value,Vector<Node*>& result);
 
   private:
     Node *root_;
