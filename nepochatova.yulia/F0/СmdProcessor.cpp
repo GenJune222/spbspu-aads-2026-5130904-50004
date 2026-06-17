@@ -2,6 +2,10 @@
 
 namespace nepochatova {
 
+  CommandProcessor::CommandProcessor(DocumentManager& manager)
+    : manager_(manager)
+  {}
+
   void CommandProcessor::execute(const std::string& commandLine)
   {
     Vector<std::string> args = split(commandLine);
@@ -194,6 +198,80 @@ namespace nepochatova {
       tree->deleteNode(result[0]);
 
       std::cout << "<OK> Node deleted\n";
+    } catch (const std::exception &) {
+      std::cout << "<ERROR>\n";
+    }
+  }
+
+  void CommandProcessor::moveCmd(const Vector<std::string> &args)
+  {
+    if (args.getSize() < 4) {
+      std::cout << "<INVALID ARGUMENTS>\n";
+      return;
+    }
+
+    DocumentTree *tree = manager_.getTree(args[1]);
+
+    if (!tree) {
+      std::cout << "<NO TREE>\n";
+      return;
+    }
+
+    try {
+      Node *root = tree->getRoot();
+
+      Vector<Node*> nodes;
+      root->findById(args[2], nodes);
+
+      if (nodes.isEmpty()) {
+        std::cout << "<NO NODE>\n";
+        return;
+      }
+
+      Vector<Node*> parents;
+      root->findById(args[3], parents);
+
+      if (parents.isEmpty()) {
+        std::cout << "<NO PARENT>\n";
+        return;
+      }
+
+      tree->moveNode(nodes[0], parents[0]);
+
+      std::cout << "<OK> Node moved\n";
+    } catch (const std::exception &) {
+      std::cout << "<ERROR>\n";
+    }
+  }
+
+  void CommandProcessor::renameCmd(const Vector<std::string> &args)
+  {
+    if (args.getSize() < 4) {
+      std::cout << "<INVALID ARGUMENTS>\n";
+      return;
+    }
+
+    DocumentTree *tree = manager_.getTree(args[1]);
+
+    if (!tree) {
+      std::cout << "<NO TREE>\n";
+      return;
+    }
+
+    try {
+      Node *root = tree->getRoot();
+
+      Vector<Node*> result;
+      root->findById(args[2], result);
+
+      if (result.isEmpty()) {
+        std::cout << "<NO NODE>\n";
+        return;
+      }
+
+      result[0]->setTag(args[3]);
+
+      std::cout << "<OK> Renamed\n";
     } catch (const std::exception &) {
       std::cout << "<ERROR>\n";
     }

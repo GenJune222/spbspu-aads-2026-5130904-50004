@@ -44,6 +44,8 @@ namespace nepochatova {
 
     void findByClass(const std::string &cls, Vector<Node *> &result);
 
+    void setTag(const std::string &tag);
+
   private:
     std::string tag_;
     HashTable<std::string, std::string> attributes_;

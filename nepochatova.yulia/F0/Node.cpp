@@ -180,6 +180,11 @@ namespace nepochatova {
     }
   }
 
+  void Node::setTag(const std::string &tag)
+  {
+    tag_ = tag;
+  }
+
   bool Node::containsInSubtree(Node *node) const
   {
     if (this == node)
