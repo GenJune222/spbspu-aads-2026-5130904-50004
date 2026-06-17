@@ -76,7 +76,7 @@ nepochatova::Vector<T>::~Vector()
 
 template<class T>
 nepochatova::Vector<T>::Vector(size_t size) :
-  data_(size ? new T[size] : nullptr),
+  data_(size ? new T[size]{} : nullptr),
   size_(size),
   capacity_(size)
 {}
@@ -199,7 +199,8 @@ void nepochatova::Vector<T>::pushBack(const T &rhs)
     data_ = newData;
     capacity_ = newCapacity;
   }
-  data_[size_++] = rhs;
+  data_[size_] = rhs;
+  ++size_;
 }
 
 template<class T>

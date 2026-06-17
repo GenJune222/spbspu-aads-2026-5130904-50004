@@ -103,8 +103,7 @@ T &nepochatova::Iterator<T>::operator*() const {
 
 template<class T>
 bool nepochatova::Iterator<T>::operator==(const Iterator<T> &other) const {
-  return vector == other.vector &&
-         id == other.id;
+  return vector == other.vector && id == other.id;
 }
 
 template<class T>
@@ -200,8 +199,7 @@ nepochatova::CIterator<T> nepochatova::CIterator<T>::operator++(int) {
 
 template<class T>
 bool nepochatova::CIterator<T>::operator==(const CIterator<T> &other) const {
-  return vector == other.vector &&
-        id == other.id;
+  return vector == other.vector && id == other.id;
 }
 
 template<class T>

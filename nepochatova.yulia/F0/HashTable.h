@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <utility>
 #include <string>
+#include <xxhash.h>
 #include "HashIters.h"
 
 namespace nepochatova {
@@ -13,15 +14,26 @@ namespace nepochatova {
   template<class Key, class Value, class Hash, class Equal>
   class HashConstIter;
 
-  struct XXHash {
-    size_t operator()(const std::string &key) const
+  struct XXHash
+  {
+    template<class T>
+    size_t operator()(const T& key) const
     {
-      size_t hash = 14695981039346656037ULL;
-      for (char c: key) {
-        hash ^= static_cast<size_t>(c);
-        hash *= 1099511628211ULL;
-      }
-      return hash;
+      return XXH64(
+          &key,
+          sizeof(T),
+          0
+      );
+    }
+
+
+    size_t operator()(const std::string& key) const
+    {
+      return XXH64(
+          key.data(),
+          key.size(),
+          0
+      );
     }
   };
 
@@ -115,7 +127,7 @@ nepochatova::HashTable<Key, Value, Hash, Equal>::HashTable(HashTable &&other) no
 
 
 template<class Key, class Value, class Hash, class Equal>
-nepochatova::HashTable<Key, Value, Hash, Equal>::HashTable &
+nepochatova::HashTable<Key, Value, Hash, Equal> &
 nepochatova::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable &other)
 {
   if (this != &other) {
@@ -126,7 +138,7 @@ nepochatova::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable &othe
 }
 
 template<class Key, class Value, class Hash, class Equal>
-nepochatova::HashTable<Key, Value, Hash, Equal>::HashTable &
+nepochatova::HashTable<Key, Value, Hash, Equal> &
 nepochatova::HashTable<Key, Value, Hash, Equal>::operator=(HashTable &&other) noexcept
 {
   if (this != &other) {
@@ -267,8 +279,12 @@ template<class Key, class Value, class Hash, class Equal>
 typename nepochatova::HashTable<Key, Value, Hash, Equal>::HIter
 nepochatova::HashTable<Key, Value, Hash, Equal>::begin()
 {
-  if (data_.isEmpty()) return end();
-  return HIter(this, 0, data_[0].begin());
+  for (size_t i = 0; i < data_.getSize(); ++i) {
+    if (!data_[i].isEmpty()) {
+      return HIter(this, i, data_[i].begin());
+    }
+  }
+  return end();
 }
 
 template<class Key, class Value, class Hash, class Equal>

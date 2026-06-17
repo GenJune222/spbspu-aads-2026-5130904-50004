@@ -89,7 +89,14 @@ nepochatova::HashIter<Key, Value, Hash, Equal>::HashIter(
 
   while (bucket_index_ < table_->data_.getSize() &&
          chain_it_ == table_->data_[bucket_index_].end()) {
+
     ++bucket_index_;
+
+    while (bucket_index_ < table_->data_.getSize() &&
+        table_->data_[bucket_index_].isEmpty()) {
+      ++bucket_index_;
+    }
+
     if (bucket_index_ < table_->data_.getSize()) {
       chain_it_ = table_->data_[bucket_index_].begin();
     }
@@ -109,6 +116,12 @@ nepochatova::HashIter<Key, Value, Hash, Equal>::operator++()
   while (bucket_index_ < table_->data_.getSize() &&
          chain_it_ == table_->data_[bucket_index_].end()) {
     ++bucket_index_;
+
+    while (bucket_index_ < table_->data_.getSize() &&
+        table_->data_[bucket_index_].isEmpty()) {
+          ++bucket_index_;
+    }
+
     if (bucket_index_ < table_->data_.getSize()) {
       chain_it_ = table_->data_[bucket_index_].begin();
     }
@@ -119,14 +132,21 @@ nepochatova::HashIter<Key, Value, Hash, Equal>::operator++()
 template<class Key, class Value, class Hash, class Equal>
 bool nepochatova::HashIter<Key, Value, Hash, Equal>::operator==(const HashIter& other) const
 {
-  return table_ == other.table_
-      && bucket_index_ == other.bucket_index_
-      && chain_it_ == other.chain_it_;
+  if (table_ != other.table_) {
+    return false;
+  }
+
+  if (bucket_index_ >= table_->data_.getSize() &&
+      other.bucket_index_ >= table_->data_.getSize()) {
+    return true;
+  }
+
+  return bucket_index_ == other.bucket_index_
+         && chain_it_ == other.chain_it_;
 }
 
 template<class Key, class Value, class Hash, class Equal>
-bool nepochatova::HashIter<Key, Value, Hash, Equal>::operator!=(
-  const HashIter &other) const
+bool nepochatova::HashIter<Key, Value, Hash, Equal>::operator!=(const HashIter &other) const
 {
   return !(*this == other);
 }
@@ -173,7 +193,14 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::HashConstIter(
 
   while (bucket_index_ < table_->data_.getSize() &&
          chain_it_ == table_->data_[bucket_index_].cend()) {
+
     ++bucket_index_;
+
+    while (bucket_index_ < table_->data_.getSize() &&
+        table_->data_[bucket_index_].isEmpty()) {
+      ++bucket_index_;
+    }
+
     if (bucket_index_ < table_->data_.getSize()) {
       chain_it_ = table_->data_[bucket_index_].cbegin();
     }
@@ -191,10 +218,17 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++()
   ++chain_it_;
 
   while (bucket_index_ < table_->data_.getSize() &&
-         chain_it_ == table_->data_[bucket_index_].cend()) {
+         chain_it_ == table_->data_[bucket_index_].сend()) {
+
     ++bucket_index_;
+
+    while (bucket_index_ < table_->data_.getSize() &&
+        table_->data_[bucket_index_].isEmpty()) {
+      ++bucket_index_;
+    }
+
     if (bucket_index_ < table_->data_.getSize()) {
-      chain_it_ = table_->data_[bucket_index_].cbegin();
+      chain_it_ = table_->data_[bucket_index_].сbegin();
     }
   }
   return *this;
@@ -203,9 +237,17 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++()
 template<class Key, class Value, class Hash, class Equal>
 bool nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator==(const HashConstIter& other) const
 {
-  return table_ == other.table_
-      && bucket_index_ == other.bucket_index_
-      && chain_it_ == other.chain_it_;
+  if (table_ != other.table_) {
+    return false;
+  }
+
+  if (bucket_index_ >= table_->data_.getSize() &&
+      other.bucket_index_ >= table_->data_.getSize()) {
+    return true;
+      }
+
+  return bucket_index_ == other.bucket_index_
+         && chain_it_ == other.chain_it_;
 }
 template<class Key, class Value, class Hash, class Equal>
 bool nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator!=(

@@ -36,8 +36,13 @@ namespace nepochatova {
   }
 
   void Node::moveTo(Node *newParent) {
-    if (newParent == nullptr) {
+
+    if (!newParent) {
       throw std::invalid_argument("null parent");
+    }
+
+    if (parent_ == newParent) {
+      return;
     }
 
     if (newParent == this) {
