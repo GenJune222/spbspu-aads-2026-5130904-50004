@@ -1,0 +1,61 @@
+#include "DocumentManager.h"
+
+namespace nepochatova {
+
+  DocumentManager::DocumentManager() {}
+
+  DocumentManager::~DocumentManager()
+  {
+    for (auto it = trees_.begin(); it != trees_.end(); ++it) {
+      delete it->second;
+    }
+  }
+
+  void DocumentManager::createTree(const std::string &name, const std::string &rootTag)
+  {
+    if (trees_.contains(name)) {
+      throw std::runtime_error("tree already exists");
+    }
+
+    DocumentTree* tree = new DocumentTree(rootTag);
+
+    trees_.insert(name, tree);
+  }
+
+  void DocumentManager::deleteTree(const std::string &name)
+  {
+    if (!trees_.contains(name)) {
+      throw std::runtime_error("tree not found");
+    }
+
+    DocumentTree* tree = trees_.erase(name);
+
+    delete tree;
+  }
+
+  bool DocumentManager::contains(const std::string &name) const
+  {
+    return trees_.contains(name);
+  }
+
+  DocumentTree *DocumentManager::getTree(const std::string &name)
+  {
+    if (!trees_.contains(name)) {
+      throw std::runtime_error("tree not found");
+    }
+    return trees_.find(name);
+  }
+
+  const DocumentTree *DocumentManager::getTree(const std::string &name) const
+  {
+    if (!trees_.contains(name)) {
+      throw std::runtime_error("tree not found");
+    }
+    return trees_.find(name);
+  }
+
+  size_t DocumentManager::size() const
+  {
+    return trees_.size();
+  }
+}
