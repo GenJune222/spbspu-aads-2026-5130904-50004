@@ -28,7 +28,7 @@ namespace nepochatova {
     //load и safe пока не пишем
     void dropCmd(const Vector<std::string> &args);
 
-    void listCmd();
+    void listCmd(const Vector<std::string>& args);
 
     void printTreeCmd(const Vector<std::string> &args);
     void printSubtreeCmd(const Vector<std::string> &args);

@@ -19,7 +19,9 @@ namespace nepochatova {
     Node *addChild(const std::string &tag);
     void attachChild(Node* child);
     void removeChild(Node *node);
+    void detachChild(Node* child);
     void moveTo(Node *newParent);
+    Node* clone() const;
 
     void setAttribute(const std::string &key, const std::string &value);
     void removeAttribute(const std::string &key);

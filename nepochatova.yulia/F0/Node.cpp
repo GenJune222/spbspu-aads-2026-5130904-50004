@@ -47,6 +47,29 @@ namespace nepochatova {
     }
   }
 
+  void Node::detachChild(Node *child) {
+    if (!child) {
+      throw std::invalid_argument("null child");
+    }
+
+    if (child->parent_ != this)
+    {
+      throw std::runtime_error("not a child");
+    }
+
+    for (size_t i = 0; i < children_.getSize(); ++i) {
+      if (children_[i] == child) {
+        children_.erase(i);
+        child->parent_ = nullptr;
+        return;
+      }
+    }
+
+    throw std::runtime_error(
+      "child not found"
+    );
+  }
+
   void Node::moveTo(Node *newParent) {
 
     if (!newParent) {
@@ -75,6 +98,22 @@ namespace nepochatova {
     }
     parent_ = newParent;
     newParent->children_.pushBack(this);
+  }
+
+  Node *Node::clone() const
+  {
+    Node *copy = new Node(tag_);
+
+    for (auto it = attributes_.begin(); it != attributes_.end(); ++it){
+      copy->setAttribute(it->first,it->second);
+    }
+
+    for (auto child: children_) {
+      Node *childCopy = child->clone();
+      copy->attachChild(childCopy);
+    }
+
+    return copy;
   }
 
   void Node::setAttribute(const std::string &key, const std::string &value)
