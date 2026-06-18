@@ -218,7 +218,7 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++()
   ++chain_it_;
 
   while (bucket_index_ < table_->data_.getSize() &&
-         chain_it_ == table_->data_[bucket_index_].сend()) {
+         chain_it_ == table_->data_[bucket_index_].cend()) {
 
     ++bucket_index_;
 
@@ -228,7 +228,7 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++()
     }
 
     if (bucket_index_ < table_->data_.getSize()) {
-      chain_it_ = table_->data_[bucket_index_].сbegin();
+      chain_it_ = table_->data_[bucket_index_].cbegin();
     }
   }
   return *this;

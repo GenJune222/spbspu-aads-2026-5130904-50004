@@ -298,8 +298,13 @@ template<class Key, class Value, class Hash, class Equal>
 typename nepochatova::HashTable<Key, Value, Hash, Equal>::HCIter
 nepochatova::HashTable<Key, Value, Hash, Equal>::begin() const
 {
-  if (data_.isEmpty()) return cend();
-  return HCIter(this, 0, data_[0].cbegin());
+  for (size_t i = 0; i < data_.getSize(); ++i) {
+
+    if (!data_[i].isEmpty()) {
+      return HCIter(this, i, data_[i].cbegin());
+    }
+  }
+  return end();
 }
 
 template<class Key, class Value, class Hash, class Equal>
