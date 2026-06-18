@@ -276,4 +276,60 @@ namespace nepochatova {
       std::cout << "<ERROR>\n";
     }
   }
+
+  void CommandProcessor::setAttributeCmd(const Vector<std::string>& args)
+  {
+    if (args.getSize() < 5) {
+      std::cout << "<INVALID ARGUMENTS>\n";
+      return;
+    }
+
+    DocumentTree* tree = manager_.getTree(args[1]);
+
+    if (!tree) {
+      std::cout << "<NO TREE>\n";
+      return;
+    }
+
+    Vector<Node*> result;
+
+    tree->find("id", args[2], result);
+
+    if (result.isEmpty()) {
+      std::cout << "<NO NODE>\n";
+      return;
+    }
+
+    result[0]->setAttribute(args[3], args[4]);
+
+    std::cout << "<OK>\n";
+  }
+
+  void CommandProcessor::removeAttributeCmd(const Vector<std::string>& args)
+  {
+    if (args.getSize() < 4) {
+      std::cout << "<INVALID ARGUMENTS>\n";
+      return;
+    }
+
+    DocumentTree* tree = manager_.getTree(args[1]);
+
+    if (!tree) {
+      std::cout << "<NO TREE>\n";
+      return;
+    }
+
+    Vector<Node*> result;
+
+    tree->find("id", args[2], result);
+
+    if (result.isEmpty()) {
+      std::cout << "<NO NODE>\n";
+      return;
+    }
+
+    result[0]->removeAttribute(args[3]);
+
+    std::cout << "<OK>\n";
+  }
 }
