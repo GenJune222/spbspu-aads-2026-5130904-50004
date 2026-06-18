@@ -17,6 +17,7 @@ namespace nepochatova {
     //запрещаю копирование и копирующее присваивание чтобы нельщя было очистить одну и ту же память 2 раза
 
     Node *addChild(const std::string &tag);
+    void attachChild(Node* child);
     void removeChild(Node *node);
     void moveTo(Node *newParent);
 
@@ -24,6 +25,7 @@ namespace nepochatova {
     void removeAttribute(const std::string &key);
     bool hasAttribute(const std::string &key) const;
     std::string getAttribute(const std::string &key) const;
+    const HashTable<std::string, std::string>& getAttributes() const;
 
     const std::string &getTag() const;
 

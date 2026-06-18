@@ -23,6 +23,18 @@ namespace nepochatova {
     return child;
   }
 
+  void Node::attachChild(Node* child)
+  {
+    if (!child) {
+      throw std::invalid_argument("null child");
+    }
+    if (child == this) {
+      throw std::invalid_argument("cycle");
+    }
+    child->parent_ = this;
+    children_.pushBack(child);
+  }
+
   void Node::removeChild(Node *node)
   {
     for (size_t i = 0; i < children_.getSize(); ++i) {
@@ -85,6 +97,11 @@ namespace nepochatova {
   std::string Node::getAttribute(const std::string &key) const
   {
     return attributes_.find(key);
+  }
+
+  const HashTable<std::string, std::string>& Node::getAttributes() const
+  {
+    return attributes_;
   }
 
   const std::string &Node::getTag() const
