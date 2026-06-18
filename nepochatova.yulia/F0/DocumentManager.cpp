@@ -22,6 +22,19 @@ namespace nepochatova {
     trees_.insert(name, tree);
   }
 
+  void DocumentManager::addTree(const std::string& name, DocumentTree* tree)
+  {
+    if (!tree) {
+      throw std::invalid_argument("null tree");
+    }
+
+    if (contains(name)) {
+      throw std::invalid_argument("tree already exists");
+    }
+
+    trees_.insert(name, tree);
+  }
+
   void DocumentManager::deleteTree(const std::string &name)
   {
     if (!trees_.contains(name)) {

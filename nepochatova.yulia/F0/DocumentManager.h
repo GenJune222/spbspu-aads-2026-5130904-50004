@@ -16,6 +16,7 @@ namespace nepochatova {
     DocumentManager &operator=(const DocumentManager &) = delete;
 
     void createTree(const std::string &name, const std::string &rootTag);
+    void addTree(const std::string& name, DocumentTree* tree);
     void deleteTree(const std::string &name);
     bool contains(const std::string &name) const;
 

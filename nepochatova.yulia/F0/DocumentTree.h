@@ -8,6 +8,7 @@ namespace nepochatova {
   {
   public:
     explicit DocumentTree(const std::string &rootTag);
+    explicit DocumentTree(Node* root);
     ~DocumentTree();
     DocumentTree(const DocumentTree &) = delete;
     DocumentTree &operator=(const DocumentTree &) = delete;

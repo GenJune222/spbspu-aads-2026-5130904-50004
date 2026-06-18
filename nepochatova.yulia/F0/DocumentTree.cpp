@@ -7,6 +7,16 @@ namespace nepochatova {
     root_ = new Node(rootTag);
   }
 
+  DocumentTree::DocumentTree(Node* root):
+    root_(root)
+  {
+    if (!root_) {
+      throw std::invalid_argument(
+          "null root"
+      );
+    }
+  }
+
   DocumentTree::~DocumentTree()
   {
     delete root_;
