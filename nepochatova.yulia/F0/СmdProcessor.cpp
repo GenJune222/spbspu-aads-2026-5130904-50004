@@ -1,40 +1,7 @@
 #include "CmdProcessor.h"
+#include "XMLParser.h"
 
 namespace nepochatova {
-
-  CommandProcessor::CommandProcessor(DocumentManager& manager)
-    : manager_(manager)
-  {}
-
-  void CommandProcessor::execute(const std::string& commandLine)
-  {
-    Vector<std::string> args = split(commandLine);
-
-    if (args.isEmpty()) {
-      return;
-    }
-
-    if (args[0] == "create") {
-      createCmd(args);
-    }
-    else if (args[0] == "drop") {
-      dropCmd(args);
-    }
-    else if (args[0] == "list") {
-      listCmd();
-    }
-    else if (args[0] == "print_tree") {
-      printTreeCmd(args);
-    }
-    else if (args[0] == "print_subtree") {
-      printSubtreeCmd(args);
-    }
-    else {
-      throw std::invalid_argument(
-          "Unknown command"
-      );
-    }
-  }
 
   void CommandProcessor::createCmd(const Vector<std::string>& args)
   {
@@ -332,4 +299,59 @@ namespace nepochatova {
 
     std::cout << "<OK>\n";
   }
+
+  void CommandProcessor::statsCmd(const Vector<std::string>& args)
+  {
+    if (args.getSize() != 3) {
+      throw std::invalid_argument("Invalid arguments");
+    }
+
+    DocumentTree* tree = manager_.getTree(args[1]);
+
+    if (args[2] == "depth") {
+      std::cout
+          << "MAX DEPTH: "
+          << tree->getRoot()->depth()
+          << '\n';
+    }
+    else if (args[2] == "size") {
+      std::cout
+          << "SIZE: "
+          << tree->getRoot()->size()
+          << '\n';
+    }
+    else {
+      throw std::invalid_argument("Unknown stats type");
+    }
+  }
+
+  void CommandProcessor::loadCmd(const Vector<std::string>& args)
+  {
+    if (args.getSize() != 3) {
+      throw std::invalid_argument("Wrong load arguments");
+    }
+    std::string treeName = args[1];
+    std::string filename = args[2];
+
+    DocumentTree* tree = XMLParser::load(filename);
+
+    manager_.addTree(treeName,tree);
+  }
+
+  void CommandProcessor::saveCmd(const Vector<std::string> &args) {
+
+    if (args.getSize() != 3) {
+      throw std::invalid_argument("Wrong save arguments");
+    }
+
+    std::string treeName = args[1];
+    std::string filename = args[2];
+
+    DocumentTree *tree = manager_.getTree(treeName);
+
+    XMLParser parser;
+
+    parser.save(*tree,filename);
+  }
 }
+

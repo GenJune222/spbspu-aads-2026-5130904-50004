@@ -14,7 +14,11 @@ namespace nepochatova {
     void execute(const std::string &commandLine);
 
   private:
+
+    using Command = void (CommandProcessor::*)(const Vector<std::string>&);
+
     DocumentManager &manager_;
+    HashTable<std::string, Command> commands_;
 
     Vector<std::string> split(const std::string &line);
 
