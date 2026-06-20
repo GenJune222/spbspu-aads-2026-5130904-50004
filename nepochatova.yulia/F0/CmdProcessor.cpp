@@ -268,7 +268,7 @@ namespace nepochatova {
 
     result[0]->setAttribute(args[3], args[4]);
 
-    std::cout << "<OK>\n";
+    std::cout << "<OK> Attribute updated\n";
   }
 
   void CommandProcessor::removeAttributeCmd(const Vector<std::string>& args)
@@ -296,7 +296,7 @@ namespace nepochatova {
 
     result[0]->removeAttribute(args[3]);
 
-    std::cout << "<OK>\n";
+    std::cout << "<OK> Attribute removed\n";
   }
 
   void CommandProcessor::statsCmd(const Vector<std::string>& args)
@@ -333,6 +333,8 @@ namespace nepochatova {
     DocumentTree* tree = XMLParser::load(filename);
 
     manager_.addTree(treeName,tree);
+
+    std::cout << "<OK> Document loaded\n";
   }
 
   void CommandProcessor::saveCmd(const Vector<std::string> &args)
@@ -350,6 +352,8 @@ namespace nepochatova {
     XMLParser parser;
 
     parser.save(*tree,filename);
+
+    std::cout << "<OK> Document saved\n";
   }
 
   void CommandProcessor::insertCmd(const Vector<std::string> &args)
@@ -381,6 +385,8 @@ namespace nepochatova {
     Node *copy = sourceNode->clone();
 
     targetParent->attachChild(copy);
+
+    std::cout << "<OK> Subtree inserted\n";
   }
 
   void CommandProcessor::mergeCmd(const Vector<std::string> &args)
@@ -397,6 +403,8 @@ namespace nepochatova {
     Node *copy = sourceRoot->clone();
 
     target->getRoot()->attachChild(copy);
+
+    std::cout << "<OK>  Documents merged\n";
   }
 
   void CommandProcessor::splitCmd(const Vector<std::string> &args)
@@ -431,6 +439,7 @@ namespace nepochatova {
       delete newTree;
       throw;
     }
+    std::cout << "<OK> Document created\n";
   }
 }
 
