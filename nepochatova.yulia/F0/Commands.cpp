@@ -79,6 +79,21 @@ namespace nepochatova {
         "stats",
         &CommandProcessor::statsCmd
     );
+
+    commands_.insert(
+        "insert",
+        &CommandProcessor::insertCmd
+    );
+
+    commands_.insert(
+        "merge",
+        &CommandProcessor::mergeCmd
+    );
+
+    commands_.insert(
+        "split",
+        &CommandProcessor::splitCmd
+    );
   }
 
   Vector<std::string> CommandProcessor::split(

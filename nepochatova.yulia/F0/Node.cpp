@@ -5,7 +5,10 @@ namespace nepochatova {
   Node::Node(const std::string &tag) :
     tag_(tag),
     parent_(nullptr)
-  {}
+  {
+    static size_t nextId = 1;
+    setAttribute("id",std::to_string(nextId++));
+  }
 
   Node::~Node()
   {
@@ -173,7 +176,20 @@ namespace nepochatova {
     for (size_t i = 0; i < depth; ++i) {
       std::cout << "    ";
     }
-    std::cout << tag_ << "\n";
+    std::cout << tag_;
+
+    const auto& attrs = getAttributes();
+
+    for (auto it = attrs.begin(); it != attrs.end(); ++it) {
+      std::cout
+          << " "
+          << it->first
+          << "=\""
+          << it->second
+          << "\"";
+    }
+
+    std::cout << "\n";
 
     for (auto child: children_) {
       child->printTree(depth + 1);
@@ -252,5 +268,14 @@ namespace nepochatova {
     }
 
     return false;
+  }
+
+  std::string Node::getPath() const
+  {
+    if (!parent_) {
+      return tag_;
+    }
+
+    return parent_->getPath() + "/" + tag_;
   }
 }

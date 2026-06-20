@@ -50,6 +50,8 @@ namespace nepochatova {
 
     void setTag(const std::string &tag);
 
+    std::string getPath() const;
+
   private:
     std::string tag_;
     HashTable<std::string, std::string> attributes_;

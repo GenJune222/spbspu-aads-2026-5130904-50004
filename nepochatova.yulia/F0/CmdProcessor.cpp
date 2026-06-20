@@ -72,8 +72,7 @@ namespace nepochatova {
     }
   }
 
-  void CommandProcessor::findCmd(const Vector<std::string> &args)
-  {
+  void CommandProcessor::findCmd(const Vector<std::string> &args) {
     if (args.getSize() < 4) {
       std::cout << "<INVALID ARGUMENTS>\n";
       return;
@@ -90,17 +89,17 @@ namespace nepochatova {
 
     tree->find(args[2], args[3], result);
 
-    std::cout << args[3]
-              << " ("
-              << result.getSize()
-              << " matches)"
-              << "\n";
+    std::cout
+      << "Found: "
+      << result.getSize()
+      << " nodes\n";
 
     for (auto node : result)
     {
-      std::cout << "- "
-                << node->getTag()
-                << "\n";
+      std::cout
+          << "- "
+          << node->getPath()
+          << '\n';
     }
   }
 

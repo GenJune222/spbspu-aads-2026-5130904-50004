@@ -42,13 +42,7 @@ namespace nepochatova {
     void setAttributeCmd(const Vector<std::string> &args);
     void removeAttributeCmd(const Vector<std::string> &args);
 
-    void undoCmd(const Vector<std::string> &args);
-    void redoCmd(const Vector<std::string> &args);
-    // для этих пока тоже
-
     void statsCmd(const Vector<std::string> &args);
-    void analyzeCmd(const Vector<std::string> &args);
-    //нужен ли вообще анализ? Крч если успею(
 
     void insertCmd(const Vector<std::string> &args);
     void mergeCmd(const Vector<std::string> &args);
