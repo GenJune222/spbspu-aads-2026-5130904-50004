@@ -50,7 +50,8 @@ namespace nepochatova {
     }
   }
 
-  void Node::detachChild(Node *child) {
+  void Node::detachChild(Node *child)
+  {
     if (!child) {
       throw std::invalid_argument("null child");
     }
@@ -73,7 +74,8 @@ namespace nepochatova {
     );
   }
 
-  void Node::moveTo(Node *newParent) {
+  void Node::moveTo(Node *newParent)
+  {
 
     if (!newParent) {
       throw std::invalid_argument("null parent");

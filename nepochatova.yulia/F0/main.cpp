@@ -3,7 +3,8 @@
 #include "CmdProcessor.h"
 #include "DocumentManager.h"
 
-int main() {
+int main()
+{
   nepochatova::DocumentManager manager;
   nepochatova::CommandProcessor processor(manager);
 
@@ -18,6 +19,5 @@ int main() {
           << '\n';
     }
   }
-
   return 0;
 }

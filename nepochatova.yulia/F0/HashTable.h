@@ -14,8 +14,7 @@ namespace nepochatova {
   template<class Key, class Value, class Hash, class Equal>
   class HashConstIter;
 
-  struct XXHash
-  {
+  struct XXHash {
     template<class T>
     size_t operator()(const T& key) const
     {
@@ -99,7 +98,8 @@ namespace nepochatova {
 
 template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashTable<Key, Value, Hash, Equal>::HashTable(size_t slots):
-  data_(slots > 0 ? slots : 1), size_(0)
+  data_(slots > 0 ? slots : 1),
+  size_(0)
 {}
 
 template<class Key, class Value, class Hash, class Equal>

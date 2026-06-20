@@ -39,8 +39,10 @@ namespace nepochatova {
     typename Vector<std::pair<Key, Value> >::Iterator chain_it_;
   };
 
+
   template<class Key, class Value, class Hash, class Equal>
-  class HashConstIter {
+  class HashConstIter
+  {
     friend class HashTable<Key, Value, Hash, Equal>;
 
   public:

@@ -14,7 +14,6 @@ namespace nepochatova {
     void execute(const std::string &commandLine);
 
   private:
-
     using Command = void (CommandProcessor::*)(const Vector<std::string>&);
 
     DocumentManager &manager_;

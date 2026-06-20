@@ -9,7 +9,6 @@ namespace nepochatova {
   template <class T>
   class Vector
   {
-
    public:
     using Iterator = nepochatova::Iterator<T>;
     using CIterator = nepochatova::CIterator<T>;
@@ -82,7 +81,8 @@ nepochatova::Vector<T>::Vector(size_t size) :
 {}
 
 template<class T>
-nepochatova::Vector<T>::Vector(size_t size, const T &value) : Vector(size)
+nepochatova::Vector<T>::Vector(size_t size, const T &value) :
+  Vector(size)
 {
   for (size_t i = 0; i < size; ++i) {
     data_[i] = value;
@@ -90,7 +90,8 @@ nepochatova::Vector<T>::Vector(size_t size, const T &value) : Vector(size)
 }
 
 template<class T>
-nepochatova::Vector<T>::Vector(const Vector<T> &rhs) : Vector(rhs.getSize())
+nepochatova::Vector<T>::Vector(const Vector<T> &rhs) :
+  Vector(rhs.getSize())
 {
   for (size_t i = 0; i < rhs.getSize(); ++i) {
     data_[i] = rhs.data_[i];
@@ -98,7 +99,8 @@ nepochatova::Vector<T>::Vector(const Vector<T> &rhs) : Vector(rhs.getSize())
 }
 
 template<class T>
-nepochatova::Vector<T>::Vector(Vector<T> &&rhs) noexcept : Vector()
+nepochatova::Vector<T>::Vector(Vector<T> &&rhs) noexcept :
+  Vector()
 {
   swap(rhs);
 }

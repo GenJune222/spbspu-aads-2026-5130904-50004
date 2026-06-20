@@ -96,30 +96,23 @@ namespace nepochatova {
     );
   }
 
-  Vector<std::string> CommandProcessor::split(
-    const std::string &line
-  ) {
+  Vector<std::string> CommandProcessor::split(const std::string &line)
+  {
     Vector<std::string> result;
 
     std::string word;
 
     for (char ch: line) {
-      // если встретили пробел,
-      // значит текущее слово закончилось
-
       if (ch == ' ') {
-        // добавляем только если слово не пустое
         if (!word.empty()) {
-          // очищаем для следующего слова
           result.pushBack(word);
           word.clear();
         }
       } else {
-        // обычный символ добавляем в слово
         word += ch;
       }
     }
-    // после цикла последнее слово еще осталось в word
+
     if (!word.empty()) {
       result.pushBack(word);
     }

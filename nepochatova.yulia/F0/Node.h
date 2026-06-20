@@ -14,7 +14,6 @@ namespace nepochatova {
     ~Node();
     Node(const Node &) = delete;
     Node &operator=(const Node &) = delete;
-    //запрещаю копирование и копирующее присваивание чтобы нельщя было очистить одну и ту же память 2 раза
 
     Node *addChild(const std::string &tag);
     void attachChild(Node* child);

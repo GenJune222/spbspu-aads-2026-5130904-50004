@@ -2,7 +2,8 @@
 
 namespace nepochatova {
 
-  DocumentTree *XMLParser::load(const std::string &filename) {
+  DocumentTree *XMLParser::load(const std::string &filename)
+  {
     std::ifstream file(filename);
 
     if (!file.is_open()) {
@@ -17,10 +18,11 @@ namespace nepochatova {
   }
 
 
-  Node *XMLParser::loadNode(std::ifstream &file) {
+  Node *XMLParser::loadNode(std::ifstream &file)
+  {
     char ch;
 
-    while (file.get(ch)) { // ищем начало тега <
+    while (file.get(ch)) {
       if (ch == '<') {
         break;
       }
@@ -30,14 +32,13 @@ namespace nepochatova {
       return nullptr;
     }
 
-    if (file.peek() == '/') {// если встретили закрывающий тег </tag>
+    if (file.peek() == '/') {
       while (file.get(ch) && ch != '>') {
-        //пропускаем имя закрывающего тега
         }
       return nullptr;
     }
 
-    std::string tag;// читаем имя тега
+    std::string tag;
 
     while (file.get(ch) && !isspace(ch) && ch != '>' && ch != '/') {
       tag += ch;
@@ -47,7 +48,7 @@ namespace nepochatova {
       return nullptr;
     }
 
-    Node *node = new Node(tag);// читаем атрибуты
+    Node *node = new Node(tag);
 
     while (ch != '>' && ch != '/') {
       while (isspace(ch)) {
@@ -60,9 +61,9 @@ namespace nepochatova {
         break;
       }
 
-      std::string key;//читаем атрибут
+      std::string key;
 
-      while (ch != '=' && !isspace(ch)) { // пропускаем = и "
+      while (ch != '=' && !isspace(ch)) {
         key += ch;
 
         if (!file.get(ch)) {
@@ -86,12 +87,12 @@ namespace nepochatova {
       file.get(ch);
     }
 
-    if (ch == '/') {  // самозакрывающийся тег <img/>
+    if (ch == '/') {
       while (file.get(ch) && ch != '>') {}
       return node;
     }
 
-    while (true) { // обычный тег с детьми
+    while (true) {
       Node *child = loadNode(file);
 
       if (!child) {
@@ -122,33 +123,32 @@ namespace nepochatova {
       return;
     }
 
-    for (size_t i = 0; i < depth; ++i) {// добавляем отступы перед тегом
+    for (size_t i = 0; i < depth; ++i) {
       file << "\t";
     }
-    file << "<" << node->getTag(); // записываем открытие тега
+    file << "<" << node->getTag();
 
-    const auto &attributes = node->getAttributes();// получаем таблицу атрибутов узла
+    const auto &attributes = node->getAttributes();
 
-    for (auto it = attributes.begin(); it != attributes.end(); ++it){// перебираем все атрибуты
-      file << " " // добавляем атрибут в XML-формате
+    for (auto it = attributes.begin(); it != attributes.end(); ++it){
+      file << " "
           << it->first
           << "=\""
           << it->second
           << "\"";
     }
 
-    if (node->getChildren().isEmpty()) { // если детей нет, значит тег пустой
+    if (node->getChildren().isEmpty()) {
       file << "/>\n";
       return;
     }
-    file << ">\n";  // если дети есть, закрываем открывающий тег
+    file << ">\n";
 
-    for (auto child: node->getChildren()) { // рекурсивно сохраняем всех детей
+    for (auto child: node->getChildren()) {
       saveNode(child, file, depth + 1);
     }
 
-    for (size_t i = 0; i < depth; ++i) { // после детей нужно сделать отступ
-      // чтобы закрывающий тег был на своем уровне
+    for (size_t i = 0; i < depth; ++i) {
       file << "\t";
     }
     file << "</"

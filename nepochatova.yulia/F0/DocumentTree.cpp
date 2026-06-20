@@ -88,11 +88,9 @@ namespace nepochatova {
   {
     if (type == "id") {
       root_->findById(value, result);
-    }
-    else if (type == "tag") {
+    } else if (type == "tag") {
       root_->findByTag(value, result);
-    }
-    else if (type == "class") {
+    } else if (type == "class") {
       root_->findByClass(value, result);
     }
   }

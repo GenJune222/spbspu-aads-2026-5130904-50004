@@ -72,7 +72,8 @@ namespace nepochatova {
     }
   }
 
-  void CommandProcessor::findCmd(const Vector<std::string> &args) {
+  void CommandProcessor::findCmd(const Vector<std::string> &args)
+  {
     if (args.getSize() < 4) {
       std::cout << "<INVALID ARGUMENTS>\n";
       return;
@@ -94,8 +95,7 @@ namespace nepochatova {
       << result.getSize()
       << " nodes\n";
 
-    for (auto node : result)
-    {
+    for (auto node : result) {
       std::cout
           << "- "
           << node->getPath()
@@ -312,14 +312,12 @@ namespace nepochatova {
           << "MAX DEPTH: "
           << tree->getRoot()->depth()
           << '\n';
-    }
-    else if (args[2] == "size") {
+    } else if (args[2] == "size") {
       std::cout
           << "SIZE: "
           << tree->getRoot()->size()
           << '\n';
-    }
-    else {
+    } else {
       throw std::invalid_argument("Unknown stats type");
     }
   }
@@ -337,7 +335,8 @@ namespace nepochatova {
     manager_.addTree(treeName,tree);
   }
 
-  void CommandProcessor::saveCmd(const Vector<std::string> &args) {
+  void CommandProcessor::saveCmd(const Vector<std::string> &args)
+  {
 
     if (args.getSize() != 3) {
       throw std::invalid_argument("Wrong save arguments");
