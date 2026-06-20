@@ -24,7 +24,6 @@ namespace nepochatova {
     void createCmd(const Vector<std::string> &args);
     void loadCmd(const Vector<std::string> &args);
     void saveCmd(const Vector<std::string> &args);
-    //load и safe пока не пишем
     void dropCmd(const Vector<std::string> &args);
 
     void listCmd(const Vector<std::string>& args);
