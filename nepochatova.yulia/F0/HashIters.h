@@ -20,7 +20,7 @@ namespace nepochatova {
     HashIter(
       HashTable<Key, Value, Hash, Equal> *table,
       size_t bucket_index,
-      typename Vector<std::pair<Key, Value> >::Iterator it
+      typename Vector< std::pair<Key, Value> >::Iterator it
     );
 
     HashIter &operator++();
@@ -36,7 +36,7 @@ namespace nepochatova {
   private:
     HashTable<Key, Value, Hash, Equal> *table_;
     size_t bucket_index_;
-    typename Vector<std::pair<Key, Value> >::Iterator chain_it_;
+    typename Vector< std::pair<Key, Value> >::Iterator chain_it_;
   };
 
 
@@ -51,7 +51,7 @@ namespace nepochatova {
     HashConstIter(
       const HashTable<Key, Value, Hash, Equal> *table,
       size_t bucket_index,
-      typename Vector<std::pair<Key, Value> >::CIterator it
+      typename Vector< std::pair<Key, Value> >::CIterator it
     );
 
     HashConstIter &operator++();
@@ -67,7 +67,7 @@ namespace nepochatova {
   private:
     const HashTable<Key, Value, Hash, Equal> *table_;
     size_t bucket_index_;
-    typename Vector<std::pair<Key, Value> >::CIterator chain_it_;
+    typename Vector< std::pair<Key, Value> >::CIterator chain_it_;
   };
 }
 
@@ -82,20 +82,20 @@ template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashIter<Key, Value, Hash, Equal>::HashIter(
   HashTable<Key, Value, Hash, Equal> *table,
   size_t bucket_index,
-  typename Vector<std::pair<Key, Value> >::Iterator it):
+  typename Vector< std::pair<Key, Value> >::Iterator it):
     table_(table),
     bucket_index_(bucket_index),
     chain_it_(it)
 {
   if (!table_) return;
 
-  while (bucket_index_ < table_->data_.getSize() &&
-         chain_it_ == table_->data_[bucket_index_].end()) {
+  while (bucket_index_ < table_->data_.getSize()
+         && chain_it_ == table_->data_[bucket_index_].end()) {
 
     ++bucket_index_;
 
-    while (bucket_index_ < table_->data_.getSize() &&
-        table_->data_[bucket_index_].isEmpty()) {
+    while (bucket_index_ < table_->data_.getSize()
+           && table_->data_[bucket_index_].isEmpty()) {
       ++bucket_index_;
     }
 
@@ -115,12 +115,12 @@ nepochatova::HashIter<Key, Value, Hash, Equal>::operator++()
 
   ++chain_it_;
 
-  while (bucket_index_ < table_->data_.getSize() &&
-         chain_it_ == table_->data_[bucket_index_].end()) {
+  while (bucket_index_ < table_->data_.getSize()
+         && chain_it_ == table_->data_[bucket_index_].end()) {
     ++bucket_index_;
 
-    while (bucket_index_ < table_->data_.getSize() &&
-        table_->data_[bucket_index_].isEmpty()) {
+    while (bucket_index_ < table_->data_.getSize()
+           && table_->data_[bucket_index_].isEmpty()) {
           ++bucket_index_;
     }
 
@@ -138,8 +138,8 @@ bool nepochatova::HashIter<Key, Value, Hash, Equal>::operator==(const HashIter& 
     return false;
   }
 
-  if (bucket_index_ >= table_->data_.getSize() &&
-      other.bucket_index_ >= table_->data_.getSize()) {
+  if (bucket_index_ >= table_->data_.getSize()
+      && other.bucket_index_ >= table_->data_.getSize()) {
     return true;
   }
 
@@ -186,20 +186,22 @@ template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashConstIter<Key, Value, Hash, Equal>::HashConstIter(
   const HashTable<Key, Value, Hash, Equal> *table,
   size_t bucket_index,
-  typename Vector<std::pair<Key, Value> >::CIterator it):
+  typename Vector< std::pair<Key, Value> >::CIterator it):
     table_(table),
     bucket_index_(bucket_index),
     chain_it_(it)
 {
-  if (!table_) return;
+  if (!table_) {
+    return;
+  }
 
-  while (bucket_index_ < table_->data_.getSize() &&
-         chain_it_ == table_->data_[bucket_index_].cend()) {
+  while (bucket_index_ < table_->data_.getSize()
+         && chain_it_ == table_->data_[bucket_index_].cend()) {
 
     ++bucket_index_;
 
-    while (bucket_index_ < table_->data_.getSize() &&
-        table_->data_[bucket_index_].isEmpty()) {
+    while (bucket_index_ < table_->data_.getSize()
+           && table_->data_[bucket_index_].isEmpty()) {
       ++bucket_index_;
     }
 
@@ -219,13 +221,13 @@ nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator++()
 
   ++chain_it_;
 
-  while (bucket_index_ < table_->data_.getSize() &&
-         chain_it_ == table_->data_[bucket_index_].cend()) {
+  while (bucket_index_ < table_->data_.getSize()
+         && chain_it_ == table_->data_[bucket_index_].cend()) {
 
     ++bucket_index_;
 
-    while (bucket_index_ < table_->data_.getSize() &&
-        table_->data_[bucket_index_].isEmpty()) {
+    while (bucket_index_ < table_->data_.getSize()
+           && table_->data_[bucket_index_].isEmpty()) {
       ++bucket_index_;
     }
 
@@ -243,8 +245,8 @@ bool nepochatova::HashConstIter<Key, Value, Hash, Equal>::operator==(const HashC
     return false;
   }
 
-  if (bucket_index_ >= table_->data_.getSize() &&
-      other.bucket_index_ >= table_->data_.getSize()) {
+  if (bucket_index_ >= table_->data_.getSize()
+      && other.bucket_index_ >= table_->data_.getSize()) {
     return true;
       }
 

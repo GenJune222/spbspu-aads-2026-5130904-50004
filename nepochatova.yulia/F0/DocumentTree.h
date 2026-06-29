@@ -13,8 +13,8 @@ namespace nepochatova {
     DocumentTree(const DocumentTree &) = delete;
     DocumentTree &operator=(const DocumentTree &) = delete;
 
-    Node* getRoot();
-    const Node *getRoot() const;
+    Node* getRoot() noexcept;
+    const Node *getRoot() const noexcept;
 
     Node* addNode(Node *parent, const std::string &tag);
     void deleteNode(Node *node);
@@ -24,7 +24,7 @@ namespace nepochatova {
     void printTree() const;
     void printSubtree(const std::string& nodeId) const;
 
-    void find(const std::string& type,const std::string& value,Vector<Node*>& result);
+    void find(const std::string& type,const std::string& value,Vector< Node* >& result);
 
   private:
     Node *root_;

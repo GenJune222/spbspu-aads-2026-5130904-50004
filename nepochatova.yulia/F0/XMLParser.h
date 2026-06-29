@@ -1,8 +1,8 @@
 #ifndef XMLPARSER_H
 #define XMLPARSER_H
 
-#include <string>
-#include <fstream>
+#include <istream>
+#include <ostream>
 
 #include "DocumentTree.h"
 
@@ -11,13 +11,12 @@ namespace nepochatova
   class XMLParser
   {
   public:
-    XMLParser() = default;
-    static DocumentTree* load(const std::string& filename);
-    void save(const DocumentTree& tree, const std::string& filename);
+    static DocumentTree* load(std::istream& in);
+    static void save(const DocumentTree& tree, std::ostream& out);
 
   private:
-    static Node* loadNode(std::ifstream& file);
-    void saveNode(const Node* node, std::ofstream& file, size_t depth);
+    static Node* loadNode(std::istream& in);
+    static void saveNode(const Node* node, std::ostream& out, size_t depth);
   };
 }
 

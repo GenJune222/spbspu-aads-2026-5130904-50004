@@ -24,7 +24,7 @@ namespace nepochatova {
     Vector<T>& operator=(Vector<T>&& rhs) noexcept;
 
     T& operator[](size_t id) noexcept;
-    const T& operator[](size_t id) const;
+    const T& operator[](size_t id) const noexcept;
     T& at(size_t id);
     const T& at(size_t id) const;
 
@@ -52,7 +52,7 @@ namespace nepochatova {
     Iterator insert(Iterator pos, const T& value);
     Iterator erase(Iterator pos);
 
-    void clear();
+    void clear() noexcept;
 
    private:
     T* data_;
@@ -140,7 +140,7 @@ T &nepochatova::Vector<T>::operator[](size_t id) noexcept
 }
 
 template<class T>
-const T &nepochatova::Vector<T>::operator[](size_t id) const
+const T &nepochatova::Vector<T>::operator[](size_t id) const noexcept
 {
   return data_[id];
 }
@@ -378,7 +378,7 @@ nepochatova::Vector<T>::erase(Iterator pos)
 }
 
 template<class T>
-void nepochatova::Vector<T>::clear()
+void nepochatova::Vector<T>::clear() noexcept
 {
   size_ = 0;
 }

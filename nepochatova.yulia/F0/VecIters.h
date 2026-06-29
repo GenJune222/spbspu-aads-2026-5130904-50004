@@ -104,9 +104,6 @@ nepochatova::Iterator<T> &nepochatova::Iterator<T>::operator-=(size_t n)
 template<class T>
 T &nepochatova::Iterator<T>::operator*() const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return (*vector)[id];
 }
 
@@ -133,18 +130,12 @@ nepochatova::Iterator<T>& nepochatova::Iterator<T>::operator=(const Iterator& ot
 template<class T>
 nepochatova::Iterator<T> nepochatova::Iterator<T>::operator+(size_t n) const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return nepochatova::Iterator<T>(*vector, id + n);
 }
 
 template<class T>
 nepochatova::Iterator<T> nepochatova::Iterator<T>::operator-(size_t n) const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return nepochatova::Iterator<T>(*vector, id - n);
 }
 
@@ -166,9 +157,6 @@ nepochatova::Iterator<T> nepochatova::Iterator<T>::operator++(int)
 template<class T>
 T* nepochatova::Iterator<T>::operator->() const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return &(*vector)[id];
 }
 
@@ -204,9 +192,6 @@ nepochatova::CIterator<T> &nepochatova::CIterator<T>::operator-=(size_t n)
 template<class T>
 const T &nepochatova::CIterator<T>::operator*() const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return (*vector)[id];
 }
 
@@ -248,27 +233,18 @@ nepochatova::CIterator<T>& nepochatova::CIterator<T>::operator=(const CIterator&
 template<class T>
 nepochatova::CIterator<T> nepochatova::CIterator<T>::operator+(size_t n) const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return nepochatova::CIterator<T>(*vector, id + n);
 }
 
 template<class T>
 nepochatova::CIterator<T> nepochatova::CIterator<T>::operator-(size_t n) const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return nepochatova::CIterator<T>(*vector, id - n);
 }
 
 template<class T>
 const T* nepochatova::CIterator<T>::operator->() const
 {
-  if (!vector) {
-    throw std::logic_error("null iterator");
-  }
   return &(*vector)[id];
 }
 

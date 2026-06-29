@@ -22,12 +22,12 @@ namespace nepochatova {
     delete root_;
   }
 
-  Node *DocumentTree::getRoot()
+  Node *DocumentTree::getRoot() noexcept
   {
     return root_;
   }
 
-  const Node *DocumentTree::getRoot() const
+  const Node *DocumentTree::getRoot() const noexcept
   {
     return root_;
   }
@@ -73,7 +73,7 @@ namespace nepochatova {
       return;
     }
 
-    Vector<Node*> result;
+    Vector< Node* > result;
 
     root_->findById(nodeId, result);
 
@@ -84,7 +84,7 @@ namespace nepochatova {
     result[0]->printTree();
   }
 
-  void DocumentTree::find(const std::string& type, const std::string& value, Vector<Node*>& result)
+  void DocumentTree::find(const std::string& type, const std::string& value, Vector< Node* >& result)
   {
     if (type == "id") {
       root_->findById(value, result);

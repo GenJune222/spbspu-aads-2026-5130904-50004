@@ -2,45 +2,40 @@
 
 namespace nepochatova {
 
-  DocumentTree *XMLParser::load(const std::string &filename)
+  DocumentTree* XMLParser::load(std::istream& in)
   {
-    std::ifstream file(filename);
-
-    if (!file.is_open()) {
-      throw std::runtime_error("Cannot open file: " + filename);
-    }
-    Node *root = loadNode(file);
+    Node* root = loadNode(in);
 
     if (!root) {
       throw std::runtime_error("Invalid xml file");
     }
+
     return new DocumentTree(root);
   }
 
 
-  Node *XMLParser::loadNode(std::ifstream &file)
+  Node* XMLParser::loadNode(std::istream& in)
   {
     char ch;
 
-    while (file.get(ch)) {
+    while (in.get(ch)) {
       if (ch == '<') {
         break;
       }
     }
 
-    if (file.eof()) {
+    if (in.eof()) {
       return nullptr;
     }
 
-    if (file.peek() == '/') {
-      while (file.get(ch) && ch != '>') {
-        }
+    if (in.peek() == '/') {
+      while (in.get(ch) && ch != '>') {}
       return nullptr;
     }
 
     std::string tag;
 
-    while (file.get(ch) && !isspace(ch) && ch != '>' && ch != '/') {
+    while (in.get(ch) && !isspace(ch) && ch != '>' && ch != '/') {
       tag += ch;
     }
 
@@ -48,11 +43,12 @@ namespace nepochatova {
       return nullptr;
     }
 
-    Node *node = new Node(tag);
+    Node* node = new Node(tag);
 
     while (ch != '>' && ch != '/') {
+
       while (isspace(ch)) {
-        if (!file.get(ch)) {
+        if (!in.get(ch)) {
           break;
         }
       }
@@ -66,72 +62,69 @@ namespace nepochatova {
       while (ch != '=' && !isspace(ch)) {
         key += ch;
 
-        if (!file.get(ch)) {
+        if (!in.get(ch)) {
           break;
         }
       }
 
       while (ch != '"') {
-        if (!file.get(ch)) {
+        if (!in.get(ch)) {
           break;
         }
       }
 
       std::string value;
 
-      while (file.get(ch) && ch != '"') {
+      while (in.get(ch) && ch != '"') {
         value += ch;
       }
 
       node->setAttribute(key, value);
-      file.get(ch);
+
+      in.get(ch);
     }
 
     if (ch == '/') {
-      while (file.get(ch) && ch != '>') {}
+      while (in.get(ch) && ch != '>') {}
       return node;
     }
 
     while (true) {
-      Node *child = loadNode(file);
+      Node* child = loadNode(in);
 
       if (!child) {
         break;
       }
+
       node->attachChild(child);
     }
+
     return node;
   }
 
 
-  void XMLParser::save(const DocumentTree &tree, const std::string &filename)
+  void XMLParser::save(const DocumentTree& tree, std::ostream& out)
   {
-    std::ofstream file(filename);
-
-    if (!file.is_open()) {
-      throw std::runtime_error(
-        "Cannot open file: " + filename
-      );
-    }
-    saveNode(tree.getRoot(),file,0);
+    saveNode(tree.getRoot(), out, 0);
   }
 
 
-  void XMLParser::saveNode(const Node *node,std::ofstream &file,size_t depth)
+  void XMLParser::saveNode(const Node* node, std::ostream& out, size_t depth)
   {
     if (!node) {
       return;
     }
 
     for (size_t i = 0; i < depth; ++i) {
-      file << "\t";
+      out << "\t";
     }
-    file << "<" << node->getTag();
 
-    const auto &attributes = node->getAttributes();
+    out << "<" << node->getTag();
 
-    for (auto it = attributes.begin(); it != attributes.end(); ++it){
-      file << " "
+    const auto& attributes = node->getAttributes();
+
+    for (auto it = attributes.begin(); it != attributes.end(); ++it) {
+      out << " "
           << it->first
           << "=\""
           << it->second
@@ -139,19 +132,21 @@ namespace nepochatova {
     }
 
     if (node->getChildren().isEmpty()) {
-      file << "/>\n";
+      out << "/>\n";
       return;
     }
-    file << ">\n";
 
-    for (auto child: node->getChildren()) {
-      saveNode(child, file, depth + 1);
+    out << ">\n";
+
+    for (auto child : node->getChildren()) {
+      saveNode(child, out, depth + 1);
     }
 
     for (size_t i = 0; i < depth; ++i) {
-      file << "\t";
+      out << "\t";
     }
-    file << "</"
+
+    out << "</"
         << node->getTag()
         << ">\n";
   }

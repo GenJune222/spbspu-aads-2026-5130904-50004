@@ -19,7 +19,12 @@ namespace nepochatova {
 
     DocumentTree* tree = new DocumentTree(rootTag);
 
-    trees_.insert(name, tree);
+    try {
+      trees_.insert(name, tree);
+    } catch (...) {
+      delete tree;
+      throw;
+    }
   }
 
   void DocumentManager::addTree(const std::string& name, DocumentTree* tree)
@@ -46,7 +51,7 @@ namespace nepochatova {
     delete tree;
   }
 
-  bool DocumentManager::contains(const std::string &name) const
+  bool DocumentManager::contains(const std::string &name) const noexcept
   {
     return trees_.contains(name);
   }
@@ -69,7 +74,7 @@ namespace nepochatova {
 
   Vector<std::string> DocumentManager::getTreeNames() const
   {
-    Vector<std::string> result;
+    Vector< std::string > result;
 
     for (auto it = trees_.begin(); it != trees_.end(); ++it)
     {
@@ -79,7 +84,7 @@ namespace nepochatova {
     return result;
   }
 
-  size_t DocumentManager::size() const
+  size_t DocumentManager::size() const noexcept
   {
     return trees_.size();
   }

@@ -2,22 +2,41 @@
 #include "XMLParser.h"
 
 namespace nepochatova {
-
-  void CommandProcessor::createCmd(const Vector<std::string>& args)
+  void CommandProcessor::execute(const std::string &commandLine)
   {
-    if (args.getSize() != 2) {
-      throw std::invalid_argument("Invalid create command");
+    Vector< std::string > args = split(commandLine);
+
+    if (args.isEmpty()) {
+      return;
     }
 
-    manager_.createTree(args[1],"xml");
+    try {
+      Command cmd = commands_.find(args[0]);
+      (this->*cmd)(args);
+    } catch (const std::exception &e) {
+      std::cout << "<ERROR> "
+          << e.what()
+          << '\n';
+    }
+  }
+
+
+  void CommandProcessor::createCmd(const Vector< std::string > &args)
+  {
+    if (args.getSize() != 2) {
+      throw std::invalid_argument("Invalid arguments");
+    }
+
+    manager_.createTree(args[1], "xml");
 
     std::cout << "<OK> Tree created\n";
   }
 
-  void CommandProcessor::dropCmd(const Vector<std::string>& args)
+
+  void CommandProcessor::dropCmd(const Vector< std::string > &args)
   {
     if (args.getSize() != 2) {
-      throw std::invalid_argument("Invalid drop command");
+      throw std::invalid_argument("Invalid arguments");
     }
 
     manager_.deleteTree(args[1]);
@@ -25,77 +44,73 @@ namespace nepochatova {
     std::cout << "<OK> Tree removed\n";
   }
 
-  void CommandProcessor::listCmd(const Vector<std::string>& args)
-  {
-    Vector<std::string> names = manager_.getTreeNames();
 
-    for (auto name: names){
+  void CommandProcessor::listCmd(const Vector< std::string > &args)
+  {
+    Vector< std::string > names = manager_.getTreeNames();
+
+    for (auto name: names) {
       std::cout << name << '\n';
     }
   }
 
-  void CommandProcessor::printTreeCmd(const Vector<std::string> &args)
+
+  void CommandProcessor::printTreeCmd(const Vector< std::string > &args)
   {
     if (args.getSize() < 2) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *tree = manager_.getTree(args[1]);
 
     if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
+      throw std::runtime_error("No tree");
     }
 
     tree->printTree();
   }
 
 
-  void CommandProcessor::printSubtreeCmd(const Vector<std::string> &args)
+  void CommandProcessor::printSubtreeCmd(const Vector< std::string > &args)
   {
     if (args.getSize() < 3) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
-    }
-
-    DocumentTree* tree = manager_.getTree(args[1]);
-
-    if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
-    }
-    try {
-      tree->printSubtree(args[2]);
-    } catch (const std::exception& e) {
-      std::cout << "<NO NODE>\n";
-    }
-  }
-
-  void CommandProcessor::findCmd(const Vector<std::string> &args)
-  {
-    if (args.getSize() < 4) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *tree = manager_.getTree(args[1]);
 
     if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
+      throw std::runtime_error("No tree");
     }
 
-    Vector<Node*> result;
+    tree->printSubtree(args[2]);
+  }
+
+
+  void CommandProcessor::findCmd(const Vector< std::string > &args)
+  {
+    if (args.getSize() < 4) {
+      throw std::invalid_argument("Invalid arguments");
+    }
+
+    DocumentTree *tree = manager_.getTree(args[1]);
+
+    if (!tree) {
+      throw std::runtime_error("No tree");
+    }
+
+    Vector< Node * > result;
 
     tree->find(args[2], args[3], result);
 
     std::cout
-      << "Found: "
-      << result.getSize()
-      << " nodes\n";
+        << args[3]
+        << " ("
+        << result.getSize()
+        << " matches)"
+        << '\n';
 
-    for (auto node : result) {
+    for (auto node: result) {
       std::cout
           << "- "
           << node->getPath()
@@ -103,167 +118,134 @@ namespace nepochatova {
     }
   }
 
-  void CommandProcessor::addCmd(const Vector<std::string> &args)
+
+  void CommandProcessor::addCmd(const Vector< std::string > &args)
   {
     if (args.getSize() < 4) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
+      throw std::invalid_argument("Invalid arguments");
     }
 
-    DocumentTree* tree = manager_.getTree(args[1]);
+    DocumentTree *tree = manager_.getTree(args[1]);
 
     if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
+      throw std::runtime_error("No tree");
     }
 
-    try {
-      Node* parent = tree->getRoot();
+    Vector< Node * > result;
 
-      Vector<Node*> result;
-      parent->findByTag(args[2], result);
+    tree->getRoot()->findByTag(args[2], result);
 
-      if (result.isEmpty()) {
-        std::cout << "<NO NODE>\n";
-        return;
-      }
-
-      tree->addNode(result[0], args[3]);
-
-      std::cout << "<OK> Node added\n";
-    } catch (const std::exception &) {
-      std::cout << "<ERROR>\n";
+    if (result.isEmpty()) {
+      throw std::runtime_error("No node");
     }
+
+    tree->addNode(result[0], args[3]);
+
+    std::cout << "<OK> Node added\n";
   }
 
-  void CommandProcessor::deleteCmd(const Vector<std::string> &args)
+
+  void CommandProcessor::deleteCmd(const Vector< std::string > &args)
   {
     if (args.getSize() < 3) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *tree = manager_.getTree(args[1]);
 
     if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
+      throw std::runtime_error("No tree");
     }
 
-    try {
-      Node *root = tree->getRoot();
+    Vector< Node * > result;
 
-      Vector<Node*> result;
-      root->findById(args[2], result);
+    tree->getRoot()->findById(args[2], result);
 
-      if (result.isEmpty()) {
-        std::cout << "<NO NODE>\n";
-        return;
-      }
-
-      tree->deleteNode(result[0]);
-
-      std::cout << "<OK> Node deleted\n";
-    } catch (const std::exception &) {
-      std::cout << "<ERROR>\n";
+    if (result.isEmpty()) {
+      throw std::runtime_error("No node");
     }
+
+    tree->deleteNode(result[0]);
+
+    std::cout << "<OK> Node deleted\n";
   }
 
-  void CommandProcessor::moveCmd(const Vector<std::string> &args)
+  void CommandProcessor::moveCmd(const Vector< std::string > &args)
   {
     if (args.getSize() < 4) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *tree = manager_.getTree(args[1]);
 
     if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
+      throw std::runtime_error("No tree");
     }
 
-    try {
-      Node *root = tree->getRoot();
+    Vector< Node * > nodes;
+    Vector< Node * > parents;
 
-      Vector<Node*> nodes;
-      root->findById(args[2], nodes);
+    tree->find("id", args[2], nodes);
+    tree->find("id", args[3], parents);
 
-      if (nodes.isEmpty()) {
-        std::cout << "<NO NODE>\n";
-        return;
-      }
-
-      Vector<Node*> parents;
-      root->findById(args[3], parents);
-
-      if (parents.isEmpty()) {
-        std::cout << "<NO PARENT>\n";
-        return;
-      }
-
-      tree->moveNode(nodes[0], parents[0]);
-
-      std::cout << "<OK> Node moved\n";
-    } catch (const std::exception &) {
-      std::cout << "<ERROR>\n";
+    if (nodes.isEmpty()) {
+      throw std::runtime_error("Node not found");
     }
+
+    if (parents.isEmpty()) {
+      throw std::runtime_error("Parent not found");
+    }
+
+    tree->moveNode(nodes[0], parents[0]);
+
+    std::cout << "<OK> Node moved\n";
   }
 
-  void CommandProcessor::renameCmd(const Vector<std::string> &args)
+
+  void CommandProcessor::renameCmd(const Vector< std::string > &args)
   {
     if (args.getSize() < 4) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *tree = manager_.getTree(args[1]);
 
     if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
+      throw std::runtime_error("No tree");
     }
 
-    try {
-      Node *root = tree->getRoot();
-
-      Vector<Node*> result;
-      root->findById(args[2], result);
-
-      if (result.isEmpty()) {
-        std::cout << "<NO NODE>\n";
-        return;
-      }
-
-      result[0]->setTag(args[3]);
-
-      std::cout << "<OK> Renamed\n";
-    } catch (const std::exception &) {
-      std::cout << "<ERROR>\n";
-    }
-  }
-
-  void CommandProcessor::setAttributeCmd(const Vector<std::string>& args)
-  {
-    if (args.getSize() < 5) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
-    }
-
-    DocumentTree* tree = manager_.getTree(args[1]);
-
-    if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
-    }
-
-    Vector<Node*> result;
+    Vector< Node * > result;
 
     tree->find("id", args[2], result);
 
     if (result.isEmpty()) {
-      std::cout << "<NO NODE>\n";
-      return;
+      throw std::runtime_error("Node not found");
+    }
+
+    result[0]->setTag(args[3]);
+
+    std::cout << "<OK> Renamed\n";
+  }
+
+
+  void CommandProcessor::setAttributeCmd(const Vector< std::string > &args)
+  {
+    if (args.getSize() < 5) {
+      throw std::invalid_argument("Invalid arguments");
+    }
+
+    DocumentTree *tree = manager_.getTree(args[1]);
+
+    if (!tree) {
+      throw std::runtime_error("No tree");
+    }
+
+    Vector< Node * > result;
+
+    tree->find("id", args[2], result);
+
+    if (result.isEmpty()) {
+      throw std::runtime_error("Node not found");
     }
 
     result[0]->setAttribute(args[3], args[4]);
@@ -271,27 +253,25 @@ namespace nepochatova {
     std::cout << "<OK> Attribute updated\n";
   }
 
-  void CommandProcessor::removeAttributeCmd(const Vector<std::string>& args)
+
+  void CommandProcessor::removeAttributeCmd(const Vector< std::string > &args)
   {
     if (args.getSize() < 4) {
-      std::cout << "<INVALID ARGUMENTS>\n";
-      return;
+      throw std::invalid_argument("Invalid arguments");
     }
 
-    DocumentTree* tree = manager_.getTree(args[1]);
+    DocumentTree *tree = manager_.getTree(args[1]);
 
     if (!tree) {
-      std::cout << "<NO TREE>\n";
-      return;
+      throw std::runtime_error("No tree");
     }
 
-    Vector<Node*> result;
+    Vector< Node * > result;
 
     tree->find("id", args[2], result);
 
     if (result.isEmpty()) {
-      std::cout << "<NO NODE>\n";
-      return;
+      throw std::runtime_error("Node not found");
     }
 
     result[0]->removeAttribute(args[3]);
@@ -299,13 +279,19 @@ namespace nepochatova {
     std::cout << "<OK> Attribute removed\n";
   }
 
-  void CommandProcessor::statsCmd(const Vector<std::string>& args)
+
+  void CommandProcessor::statsCmd(const Vector< std::string > &args)
   {
     if (args.getSize() != 3) {
       throw std::invalid_argument("Invalid arguments");
     }
 
-    DocumentTree* tree = manager_.getTree(args[1]);
+    DocumentTree *tree = manager_.getTree(args[1]);
+
+    if (!tree) {
+      throw std::runtime_error("No tree");
+    }
+
 
     if (args[2] == "depth") {
       std::cout
@@ -322,100 +308,121 @@ namespace nepochatova {
     }
   }
 
-  void CommandProcessor::loadCmd(const Vector<std::string>& args)
+
+  void CommandProcessor::loadCmd(const Vector< std::string > &args)
   {
     if (args.getSize() != 3) {
-      throw std::invalid_argument("Wrong load arguments");
+      throw std::invalid_argument("Invalid arguments");
     }
-    std::string treeName = args[1];
-    std::string filename = args[2];
 
-    DocumentTree* tree = XMLParser::load(filename);
+    std::ifstream file(args[2]);
 
-    manager_.addTree(treeName,tree);
+    if (!file.is_open()) {
+      throw std::runtime_error("Cannot open file");
+    }
 
-    std::cout << "<OK> Document loaded\n";
+    DocumentTree *tree = XMLParser::load(file);
+
+    manager_.addTree(args[1], tree);
+
+    std::cout << "<OK> Loaded\n";
   }
 
-  void CommandProcessor::saveCmd(const Vector<std::string> &args)
+
+  void CommandProcessor::saveCmd(const Vector< std::string > &args)
   {
-
     if (args.getSize() != 3) {
-      throw std::invalid_argument("Wrong save arguments");
+      throw std::invalid_argument("Invalid arguments");
     }
 
-    std::string treeName = args[1];
-    std::string filename = args[2];
+    DocumentTree *tree = manager_.getTree(args[1]);
 
-    DocumentTree *tree = manager_.getTree(treeName);
+    if (!tree) {
+      throw std::runtime_error("No tree");
+    }
 
-    XMLParser parser;
+    std::ofstream file(args[2]);
 
-    parser.save(*tree,filename);
+    if (!file.is_open()) {
+      throw std::runtime_error("Cannot open file");
+    }
 
-    std::cout << "<OK> Document saved\n";
+    XMLParser::save(*tree, file);
+
+    std::cout << "<OK> Saved\n";
   }
 
-  void CommandProcessor::insertCmd(const Vector<std::string> &args)
+
+  void CommandProcessor::insertCmd(const Vector< std::string > &args)
   {
     if (args.getSize() != 5) {
-      throw std::invalid_argument("Usage: insert sourceTree nodeId targetTree parentId");
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *sourceTree = manager_.getTree(args[1]);
     DocumentTree *targetTree = manager_.getTree(args[3]);
 
-    Vector<Node *> sourceNodes;
+    if (!sourceTree || !targetTree) {
+      throw std::runtime_error("No tree");
+    }
+
+    Vector< Node * > sourceNodes;
+
     sourceTree->find("id", args[2], sourceNodes);
 
     if (sourceNodes.isEmpty()) {
       throw std::runtime_error("Source node not found");
     }
 
-    Vector<Node *> targetNodes;
+    Vector< Node * > targetNodes;
+
     targetTree->find("id", args[4], targetNodes);
 
     if (targetNodes.isEmpty()) {
-      throw std::runtime_error("Target parent not found");
+      throw std::runtime_error("Target node not found");
     }
 
-    Node *sourceNode = sourceNodes[0];
-    Node *targetParent = targetNodes[0];
-
-    Node *copy = sourceNode->clone();
-
-    targetParent->attachChild(copy);
+    Node *copy = sourceNodes[0]->clone();
+    targetNodes[0]->attachChild(copy);
 
     std::cout << "<OK> Subtree inserted\n";
   }
 
-  void CommandProcessor::mergeCmd(const Vector<std::string> &args)
-  {
+
+  void CommandProcessor::mergeCmd(
+    const Vector<std::string> &args) {
     if (args.getSize() != 3) {
-      throw std::invalid_argument("Usage: merge sourceTree targetTree");
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *source = manager_.getTree(args[1]);
     DocumentTree *target = manager_.getTree(args[2]);
 
-    Node *sourceRoot = source->getRoot();
+    if (!source || !target) {
+      throw std::runtime_error("No tree");
+    }
 
-    Node *copy = sourceRoot->clone();
+    Node *copy = source->getRoot()->clone();
 
     target->getRoot()->attachChild(copy);
 
-    std::cout << "<OK>  Documents merged\n";
+    std::cout << "<OK> Documents merged\n";
   }
 
-  void CommandProcessor::splitCmd(const Vector<std::string> &args)
+  void CommandProcessor::splitCmd(const Vector< std::string > &args)
   {
     if (args.getSize() != 4) {
-      throw std::invalid_argument("Usage: split tree nodeId newTree");
+      throw std::invalid_argument("Invalid arguments");
     }
 
     DocumentTree *tree = manager_.getTree(args[1]);
 
-    Vector<Node *> nodes;
+    if (!tree) {
+      throw std::runtime_error("No tree");
+    }
+
+    Vector< Node * > nodes;
+
     tree->find("id", args[2], nodes);
 
     if (nodes.isEmpty()) {
@@ -431,15 +438,10 @@ namespace nepochatova {
     Node *parent = node->getParent();
     parent->detachChild(node);
 
-    DocumentTree *newTree = new DocumentTree(node);
+    DocumentTree newTree(node);
 
-    try {
-      manager_.addTree(args[3],newTree);
-    } catch (...) {
-      delete newTree;
-      throw;
-    }
+    manager_.addTree(args[3], &newTree);
+
     std::cout << "<OK> Document created\n";
   }
 }
-

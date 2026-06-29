@@ -96,9 +96,9 @@ namespace nepochatova {
     );
   }
 
-  Vector<std::string> CommandProcessor::split(const std::string &line)
+  Vector< std::string > CommandProcessor::split(const std::string &line)
   {
-    Vector<std::string> result;
+    Vector< std::string > result;
 
     std::string word;
 
@@ -117,24 +117,5 @@ namespace nepochatova {
       result.pushBack(word);
     }
     return result;
-  }
-
-
-  void CommandProcessor::execute(const std::string &commandLine)
-  {
-    Vector<std::string> args = split(commandLine);
-
-    if (args.isEmpty()) {
-      return;
-    }
-
-    Command cmd;
-
-    try {
-      cmd = commands_.find(args[0]);
-    } catch (const std::out_of_range &) {
-      throw std::invalid_argument("Unknown command");
-    }
-    (this->*cmd)(args);
   }
 }

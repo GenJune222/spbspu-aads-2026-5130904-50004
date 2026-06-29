@@ -18,16 +18,16 @@ namespace nepochatova {
     void createTree(const std::string &name, const std::string &rootTag);
     void addTree(const std::string& name, DocumentTree* tree);
     void deleteTree(const std::string &name);
-    bool contains(const std::string &name) const;
+    bool contains(const std::string &name) const noexcept;
 
     DocumentTree* getTree(const std::string &name);
     const DocumentTree* getTree(const std::string &name) const;
-    Vector<std::string> getTreeNames() const;
+    Vector< std::string > getTreeNames() const;
 
-    size_t size() const;
+    size_t size() const noexcept;
 
   private:
-    HashTable<std::string, DocumentTree* > trees_;
+    HashTable< std::string, DocumentTree* > trees_;
   };
 }
 

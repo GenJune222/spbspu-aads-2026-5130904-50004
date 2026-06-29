@@ -133,7 +133,7 @@ namespace nepochatova {
     }
   }
 
-  bool Node::hasAttribute(const std::string &key) const
+  bool Node::hasAttribute(const std::string &key) const noexcept
   {
     return attributes_.contains(key);
   }
@@ -143,32 +143,32 @@ namespace nepochatova {
     return attributes_.find(key);
   }
 
-  const HashTable<std::string, std::string>& Node::getAttributes() const
+  const HashTable<std::string, std::string>& Node::getAttributes() const noexcept
   {
     return attributes_;
   }
 
-  const std::string &Node::getTag() const
+  const std::string &Node::getTag() const noexcept
   {
     return tag_;
   }
 
-  Node *Node::getParent()
+  Node *Node::getParent() noexcept
   {
     return parent_;
   }
 
-  const Node *Node::getParent() const
+  const Node *Node::getParent() const noexcept
   {
     return parent_;
   }
 
-  Vector<Node *> &Node::getChildren()
+  Vector<Node *> &Node::getChildren() noexcept
   {
     return children_;
   }
 
-  const Vector<Node *> &Node::getChildren() const
+  const Vector<Node *> &Node::getChildren() const noexcept
   {
     return children_;
   }
@@ -198,7 +198,7 @@ namespace nepochatova {
     }
   }
 
-  size_t Node::size() const
+  size_t Node::size() const noexcept
   {
     size_t result = 1;
 
@@ -208,7 +208,7 @@ namespace nepochatova {
     return result;
   }
 
-  size_t Node::depth() const
+  size_t Node::depth() const noexcept
   {
     size_t maxDepth = 0;
 
@@ -221,7 +221,7 @@ namespace nepochatova {
     return maxDepth + 1;
   }
 
-  void Node::findByTag(const std::string &tag, Vector<Node *> &result)
+  void Node::findByTag(const std::string &tag, Vector< Node * > &result)
   {
     if (tag_ == tag) {
       result.pushBack(this);
@@ -232,7 +232,7 @@ namespace nepochatova {
     }
   }
 
-  void Node::findById(const std::string &id, Vector<Node *> &result)
+  void Node::findById(const std::string &id, Vector< Node * > &result)
   {
     if (hasAttribute("id") && getAttribute("id") == id) {
       result.pushBack(this);
@@ -243,7 +243,7 @@ namespace nepochatova {
     }
   }
 
-  void Node::findByClass(const std::string &cls, Vector<Node *> &result)
+  void Node::findByClass(const std::string &cls, Vector< Node * > &result)
   {
     if (hasAttribute("class") && getAttribute("class") == cls) {
       result.pushBack(this);

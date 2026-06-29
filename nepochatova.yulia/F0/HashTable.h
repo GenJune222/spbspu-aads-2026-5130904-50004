@@ -4,10 +4,12 @@
 #include <stdexcept>
 #include <utility>
 #include <string>
+#include <functional>
 #include <xxhash.h>
 #include "HashIters.h"
 
 namespace nepochatova {
+
   template<class Key, class Value, class Hash, class Equal>
   class HashIter;
 
@@ -25,7 +27,6 @@ namespace nepochatova {
       );
     }
 
-
     size_t operator()(const std::string& key) const
     {
       return XXH64(
@@ -36,15 +37,9 @@ namespace nepochatova {
     }
   };
 
-  template<class T>
-  struct Equal {
-    bool operator()(const T &a, const T &b) const
-    {
-      return a == b;
-    }
-  };
+  constexpr size_t DEFAULT_HASH_TABLE_SIZE = 101;
 
-  template<class Key, class Value, class Hash = XXHash, class Equal = Equal<Key> >
+  template<class Key, class Value, class Hash = XXHash, class Equal = std::equal_to<Key>>
   class HashTable
   {
     friend class HashIter<Key, Value, Hash, Equal>;
@@ -54,7 +49,7 @@ namespace nepochatova {
     using HIter = HashIter<Key, Value, Hash, Equal>;
     using HCIter = HashConstIter<Key, Value, Hash, Equal>;
 
-    explicit HashTable(size_t slots = 101);
+    explicit HashTable(size_t slots = DEFAULT_HASH_TABLE_SIZE);
     ~HashTable() = default;
     HashTable(const HashTable &other);
     HashTable(HashTable &&other) noexcept;
@@ -64,7 +59,7 @@ namespace nepochatova {
 
     void insert(const Key &key, const Value &value);
     Value erase(const Key &key);
-    bool contains(const Key &key) const;
+    bool contains(const Key &key) const noexcept;
     void rehash(size_t new_slots);
 
     Value &find(const Key &key);
@@ -84,13 +79,13 @@ namespace nepochatova {
 
   private:
     using Bucket = Vector<std::pair<Key, Value> >;
-    Vector<Bucket> data_;
+    Vector< Bucket > data_;
 
     size_t size_;
     Hash hasher_;
     Equal equal_;
 
-    size_t getIndex(const Key &key) const;
+    size_t getIndex(const Key &key) const noexcept;
 
     static long long findIndexInBucket(const Bucket &bucket, const Key &key, Equal eq);
   };
@@ -116,7 +111,7 @@ nepochatova::HashTable<Key, Value, Hash, Equal>::HashTable(const HashTable &othe
 }
 
 template<class Key, class Value, class Hash, class Equal>
-nepochatova::HashTable<Key, Value, Hash, Equal>::HashTable(HashTable &&other) noexcept :
+nepochatova::HashTable<Key, Value, Hash, Equal>::HashTable(HashTable &&other) noexcept:
   data_(std::move(other.data_)),
   size_(other.size_),
   hasher_(std::move(other.hasher_)),
@@ -130,10 +125,9 @@ template<class Key, class Value, class Hash, class Equal>
 nepochatova::HashTable<Key, Value, Hash, Equal> &
 nepochatova::HashTable<Key, Value, Hash, Equal>::operator=(const HashTable &other)
 {
-  if (this != &other) {
-    HashTable tmp(other);
-    swap(tmp);
-  }
+  HashTable tmp(other);
+  swap(tmp);
+
   return *this;
 }
 
@@ -157,7 +151,7 @@ void nepochatova::HashTable<Key, Value, Hash, Equal>::swap(HashTable &other) noe
 }
 
 template<class Key, class Value, class Hash, class Equal>
-size_t nepochatova::HashTable<Key, Value, Hash, Equal>::getIndex(const Key &key) const
+size_t nepochatova::HashTable<Key, Value, Hash, Equal>::getIndex(const Key &key) const noexcept
 {
   return hasher_(key) % data_.getSize();
 }
@@ -185,12 +179,8 @@ void nepochatova::HashTable<Key, Value, Hash, Equal>::insert(const Key &key, con
     chain[existing].second = value;
     return;
   }
-  try {
-    chain.pushBack(std::make_pair(key, value));
-    ++size_;
-  } catch (const std::bad_alloc &) {
-    throw std::overflow_error("Hash table insertion failed: insufficient memory");
-  }
+  chain.pushBack(std::make_pair(key, value));
+  ++size_;
 }
 
 template<class Key, class Value, class Hash, class Equal>
@@ -211,7 +201,7 @@ Value nepochatova::HashTable<Key, Value, Hash, Equal>::erase(const Key &key)
 }
 
 template<class Key, class Value, class Hash, class Equal>
-bool nepochatova::HashTable<Key, Value, Hash, Equal>::contains(const Key &key) const
+bool nepochatova::HashTable<Key, Value, Hash, Equal>::contains(const Key &key) const noexcept
 {
   size_t idx = getIndex(key);
   return findIndexInBucket(data_[idx], key, equal_) >= 0;
@@ -224,7 +214,9 @@ Value &nepochatova::HashTable<Key, Value, Hash, Equal>::find(const Key &key)
   const Bucket &chain = data_[idx];
 
   long long pos = findIndexInBucket(chain, key, equal_);
-  if (pos < 0) throw std::out_of_range("Key not found");
+  if (pos < 0) {
+    throw std::out_of_range("Key not found");
+  }
   return data_[idx][static_cast<size_t>(pos)].second;
 }
 
@@ -235,14 +227,18 @@ const Value &nepochatova::HashTable<Key, Value, Hash, Equal>::find(const Key &ke
   const Bucket &chain = data_[idx];
 
   long long pos = findIndexInBucket(chain, key, equal_);
-  if (pos < 0) throw std::out_of_range("Key not found");
+  if (pos < 0) {
+    throw std::out_of_range("Key not found");
+  }
   return data_[idx][static_cast<size_t>(pos)].second;
 }
 
 template<class Key, class Value, class Hash, class Equal>
 void nepochatova::HashTable<Key, Value, Hash, Equal>::rehash(size_t new_slots)
 {
-  if (new_slots == 0 || new_slots == data_.getSize()) return;
+  if (new_slots == 0 || new_slots == data_.getSize()) {
+    return;
+  }
 
   HashTable<Key, Value, Hash, Equal> new_table(new_slots);
 

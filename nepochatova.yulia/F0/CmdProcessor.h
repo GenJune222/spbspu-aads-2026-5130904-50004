@@ -2,6 +2,7 @@
 #define COMMAND_PROCESSOR_H
 
 #include <string>
+#include <fstream>
 #include "Vector.h"
 #include "DocumentManager.h"
 
@@ -14,37 +15,37 @@ namespace nepochatova {
     void execute(const std::string &commandLine);
 
   private:
-    using Command = void (CommandProcessor::*)(const Vector<std::string>&);
+    using Command = void (CommandProcessor::*)(const Vector< std::string >&);
 
     DocumentManager &manager_;
-    HashTable<std::string, Command> commands_;
+    HashTable< std::string, Command > commands_;
 
-    Vector<std::string> split(const std::string &line);
+    static Vector< std::string > split(const std::string &line);
 
-    void createCmd(const Vector<std::string> &args);
-    void loadCmd(const Vector<std::string> &args);
-    void saveCmd(const Vector<std::string> &args);
-    void dropCmd(const Vector<std::string> &args);
+    void createCmd(const Vector< std::string > &args);
+    void loadCmd(const Vector< std::string > &args);
+    void saveCmd(const Vector< std::string > &args);
+    void dropCmd(const Vector< std::string > &args);
 
-    void listCmd(const Vector<std::string>& args);
+    void listCmd(const Vector< std::string >& args);
 
-    void printTreeCmd(const Vector<std::string> &args);
-    void printSubtreeCmd(const Vector<std::string> &args);
+    void printTreeCmd(const Vector< std::string > &args);
+    void printSubtreeCmd(const Vector< std::string > &args);
 
-    void findCmd(const Vector<std::string> &args);
-    void addCmd(const Vector<std::string> &args);
-    void deleteCmd(const Vector<std::string> &args);
-    void moveCmd(const Vector<std::string> &args);
-    void renameCmd(const Vector<std::string> &args);
+    void findCmd(const Vector< std::string > &args);
+    void addCmd(const Vector< std::string > &args);
+    void deleteCmd(const Vector< std::string > &args);
+    void moveCmd(const Vector< std::string > &args);
+    void renameCmd(const Vector< std::string > &args);
 
-    void setAttributeCmd(const Vector<std::string> &args);
-    void removeAttributeCmd(const Vector<std::string> &args);
+    void setAttributeCmd(const Vector< std::string > &args);
+    void removeAttributeCmd(const Vector< std::string > &args);
 
-    void statsCmd(const Vector<std::string> &args);
+    void statsCmd(const Vector< std::string > &args);
 
-    void insertCmd(const Vector<std::string> &args);
-    void mergeCmd(const Vector<std::string> &args);
-    void splitCmd(const Vector<std::string> &args);
+    void insertCmd(const Vector< std::string > &args);
+    void mergeCmd(const Vector< std::string > &args);
+    void splitCmd(const Vector< std::string > &args);
 
   };
 }
